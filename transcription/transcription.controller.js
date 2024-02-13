@@ -42,8 +42,6 @@ const correctedTranscription = async (transcript) => {
           content: transcript
         }
       ],
-      max_tokens: maxTokens,
-      temperature: temperature,
     });
     var responseContent = completion.choices[0].message.content;
     return responseContent
