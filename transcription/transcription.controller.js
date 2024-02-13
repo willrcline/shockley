@@ -1,7 +1,7 @@
 const  FormData  =  require('form-data');
 const { Readable } =  require('stream');
 const  axios  =  require('axios');
-const OpenAI = require("openai");;
+import { chatCompletions } from '../chatCompletions/chatCompletions.controller';
 
 const  bufferToStream  = (buffer) => {
     return  Readable.from(buffer);
@@ -28,22 +28,19 @@ const whisper = async (audioFile) => {
 const correctedTranscription = async (transcript) => {
   const systemPrompt = "You are a helpful assistant for the app Journal365. Your task is to correct any spelling discrepancies in the transcribed text. Only add necessary punctuation such as periods, commas, and capitalization, and use only the context provided."
   console.log("raw transcript___", transcript);
-  const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
-          role: "user",
-          content: transcript
-        }
-      ],
-    });
-    var responseContent = completion.choices[0].message.content;
-    return responseContent
+  var messages = [
+    {
+      role: "system",
+      content: systemPrompt,
+    },
+    {
+      role: "user",
+      content: transcript
+    }
+  ]
+
+  var correctedTranscript = await chatCompletions({messages: messages});
+  return correctedTranscript
 }
 module.exports = {whisper, correctedTranscription}
