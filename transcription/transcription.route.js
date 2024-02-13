@@ -6,9 +6,9 @@ const { whisper } = require('./transcription.controller')
 const  upload  =  multer();
 
 router.post('/', upload.single('file'), async (req, res) => {
-    console.log("Transcription request received___")
+    console.log("Transcription request received req___", req)
     try {
-        const audioFile = req.body.file
+        const audioFile = req.file
         console.log("transcription.route audioFile___", audioFile)
         if (!audioFile) {
             return res.status(400).send('No file provided.');
