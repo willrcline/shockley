@@ -1,7 +1,7 @@
 const  FormData  =  require('form-data');
 const { Readable } =  require('stream');
 const  axios  =  require('axios');
-
+const OpenAI = require("openai");;
 
 const  bufferToStream  = (buffer) => {
     return  Readable.from(buffer);
