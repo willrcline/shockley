@@ -3,7 +3,7 @@ const router = express.Router()
 const  multer  =  require('multer')
 // const { whisper, correctedTranscription } = require('./transcription.controller')
 const  upload  =  multer();
-import { onboarding } from './onboarding.controller';
+const { onboarding } = require('./onboarding.controller')
 
 router.post('/', upload.single('file'), async (req, res) => {
     const userId = req.query.userId;
