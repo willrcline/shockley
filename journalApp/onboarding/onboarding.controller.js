@@ -3,6 +3,7 @@ const { updateChatHistory, getChatHistory } = require('../helper/cache');
 const { initialChatHistory } = require('../helper/onboardingPromptFactory');
 const { chatCompletions } = require('../../chatCompletions/chatCompletions.controller');
 const { textToSpeech } = require('../../textToSpeech/textToSpeech.controller');
+const { whisper, correctedTranscription } = require('../../transcription/transcription.controller.js')
 
 const onboarding = async ({ userId, audioFile }) => {
     var responseObj = { ended: false, audioBase64: null, chatHistory: null };
