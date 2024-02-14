@@ -27,7 +27,6 @@ const whisper = async (audioFile) => {
 
 const correctedTranscription = async (transcript) => {
   const systemPrompt = "You are a helpful assistant for the app Journal365. Your task is to correct any spelling discrepancies in the transcribed text. Only add necessary punctuation such as periods, commas, and capitalization, and use only the context provided."
-  console.log("raw transcript___", transcript);
 
   var messages = [
     {

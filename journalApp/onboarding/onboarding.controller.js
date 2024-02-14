@@ -10,6 +10,7 @@ const onboarding = async ({ userId, audioFile }) => {
 
     var rawTranscript = await whisper(audioFile);
     var correctedTranscript = await correctedTranscription(rawTranscript);
+    console.log("onboarding.controller correctedTranscript___", correctedTranscript)
 
     var inputObj = { "role": "user", "content": correctedTranscript };
     var chatHistory = getChatHistory(userId);
@@ -19,6 +20,7 @@ const onboarding = async ({ userId, audioFile }) => {
     var updatedChatHistory = [...chatHistory, inputObj];
 
     var chatCompletion = await chatCompletions({ messages: updatedChatHistory });
+    console.log("onboarding.controller chatCompletion___", chatCompletion)
 
     if (checkEnd(chatCompletion)) {
         responseObj.ended = true;

@@ -10,8 +10,8 @@ router.post('/', upload.single('file'), async (req, res) => {
     const audioFile = req.file;
 
     try { 
-        var updatedResponseObj = await onboarding({userId, audioFile});
-        res.status(200).send(updatedResponseObj);
+        var responseObj = await onboarding({userId, audioFile});
+        res.status(200).send(responseObj);
 
     } catch (error) {
         console.error("onboarding.route error___", error);
