@@ -25,6 +25,7 @@ const onboarding = async ({ userId, audioFile }) => {
     if (checkEnd(chatCompletion)) {
         responseObj.ended = true;
         responseObj.chatHistory = updatedChatHistory;
+        updateChatHistory(userId, []);
     } else {
         updateChatHistory(userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }]);
         responseObj.audioBase64 = await textToSpeech({ text: chatCompletion });
