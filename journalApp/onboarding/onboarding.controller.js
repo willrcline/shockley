@@ -6,7 +6,7 @@ import { chatCompletions } from '../../chatCompletions/chatCompletions.controlle
 import { textToSpeech } from '../../textToSpeech/textToSpeech.controller'
 
 const onboarding = async ({userId, audioFile}) => {
-    var responseObj = {ended: false, audioBase64: null};
+    var responseObj = {ended: false, audioBase64: null, chatHistory: null};
 
     var rawTranscript = await whisper(audioFile);
     var correctedTranscript = await correctedTranscription(rawTranscript)
@@ -22,6 +22,7 @@ const onboarding = async ({userId, audioFile}) => {
 
     if(checkEnd(chatCompletion)) {
         responseObj.ended = true;
+        responseObj.chatHistory = updatedChatHistory;
     }
     else {
         updateChatHistory(userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }])
