@@ -7,4 +7,4 @@ const checkEnd = (text) => {
     }
 }
 
-export { checkEnd }
+module.exports = { checkEnd };

@@ -15,4 +15,4 @@ const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
     return audioBase64
 }
 
-export {textToSpeech}
+module.exports = {textToSpeech}

@@ -12,4 +12,4 @@ function getChatHistory(userId) {
     return chatCache.get(key) || [];
 }
 
-export { updateChatHistory, getChatHistory };
+module.exports = { updateChatHistory, getChatHistory };

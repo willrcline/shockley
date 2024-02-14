@@ -86,4 +86,4 @@ const sampleTranscripts = [
   ];
   
 
-export { systemPrompt, greetingPrompt, infoObjectPrompt, sampleTranscripts, initialChatHistory, customJournalPromptPrompt}
+module.exports = { systemPrompt, greetingPrompt, infoObjectPrompt, sampleTranscripts, initialChatHistory, customJournalPromptPrompt}
