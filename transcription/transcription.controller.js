@@ -1,7 +1,7 @@
 const  FormData  =  require('form-data');
 const { Readable } =  require('stream');
 const  axios  =  require('axios');
-import { chatCompletions } from '../chatCompletions/chatCompletions.controller';
+const { chatCompletions } = require('../chatCompletions/chatCompletions.controller');
 
 const  bufferToStream  = (buffer) => {
     return  Readable.from(buffer);

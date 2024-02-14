@@ -32,4 +32,4 @@ const onboarding = async ({userId, audioFile}) => {
     return responseObj;
 }
 
-export { onboarding }
+module.exports { onboarding }
