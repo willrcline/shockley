@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config()
 const transcription = require("./transcription/transcription.route");
-const onboarding = require("./onboarding/onboarding.route");
+const onboarding = require("./journalApp/onboarding/onboarding.route")
 const port = process.env.PORT || 3001;
 const cors = require('cors');
 
