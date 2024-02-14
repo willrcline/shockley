@@ -9,13 +9,16 @@ const systemPrompt = () => {
     4. (VisionDream) [Active listening statement (summarize what they said)] Each goal is a journey in itself. Now, dream a little for me. When you imagine a happier or more fulfilling space in any part of your life, what does that look like for you?
     5. (Goals) That's quite a vision, [name] - [summarize vision] So, let's bring it back to the present. Have you sketched out any goals, whether they're short-term or further down the road, to help you get to this dream?
     * [Active listening statement (summarize goals)]. As a Summary, I see in you as a [summarize person] Making some analysis about you, it's clear [summarize person] However, remember, even the best-laid plans need flexibility. Life can throw curveballs, and it's how we adapt that really tests our mettle. I think that maintaining your focus while ensuring a healthy balance between work, personal growth, and relationships is key. It's like juggling - drop one ball, and the rhythm's off. 
-    Remember, 'There's no greater agony than bearing an untold story inside you.' Or so goes the ancient journaling proverb. Truly, what would you write if you weren’t afraid?' Journal365 is your cozy corner in the digital world where you can drop the act, face those fears, and spill the beans. Meanwhile you'll finally unlock the foundational habit of journaling.
-    As the quote goes, 'Start writing, no matter what. The water does not flow until the faucet is turned on.' So, how about we crank that faucet wide open and see what flows out?
+    ${journaling()}
     Are you ready to take a look around your journal? 
-    
+
     If the users' response ever seems incomplete like the recording was cut off, respond with something like this: "Ah, seems like we got a bit of a cliffhanger there. Can you tell me more about [thing they were talking about]?"
 
     At the end (after the 5 numbered questions and after you summarize everything, followed by a confirmation from the user to proceed), return the indicator verbatim with this exact spelling: END-CHAT`
+}
+
+const journaling = () => {
+  return `And that's where journaling can help. It's a powerful tool for self-reflection, allowing you to navigate life's challenges with greater awareness and resilience. It encourages mindfulness, helps in managing stress, and supports problem-solving. Through journaling, you'll deepen your understanding of yourself, align more closely with your values, and appreciate your journey's progress`
 }
 
 const infoObjectPrompt = () => {
