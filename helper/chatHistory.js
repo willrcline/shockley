@@ -1,4 +1,4 @@
-import { journalAppOnboardingInit } from "../journalApp/helper/onboardingPromptFactory"}
+const journalAppOnboardingInit = require("../journalApp/helper/onboardingPromptFactory")
 
 const getInitialChatHistory = (projectId) => {
     if (projectId === 'JOURNAL_APP_ONBOARDING') {

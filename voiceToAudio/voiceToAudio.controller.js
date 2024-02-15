@@ -1,9 +1,9 @@
 const { checkEnd } = require('../helper/checkEnd.js');
 const { updateChatHistory, getChatHistory } = require('../helper/cache');
-const { chatCompletions } = require('../../chatCompletions/chatCompletions.controller');
-const { textToSpeech } = require('../../textToSpeech/textToSpeech.controller');
-const { whisper, correctedTranscription } = require('../../transcription/transcription.controller.js')
-const { getInitialChatHistory } = require('../helper/chatHistory.js');
+const { chatCompletions } = require('../chatCompletions/chatCompletions.controller.js')
+const { textToSpeech } = require('../textToSpeech/textToSpeech.controller');
+const { whisper, correctedTranscription } = require('../transcription/transcription.controller.js')
+const { getInitialChatHistory } = require('../helper/chatHistory.js')
 
 const VoiceToAudio = async ({projectId, userId, audioFile }) => {
     var hasEnd = false
