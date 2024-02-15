@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use('/v1/transcription', transcription)
 
-app.use("/v1/voiceToAudio", voiceToAudio)
+app.use("/v1/voice-to-audio", voiceToAudio)
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
