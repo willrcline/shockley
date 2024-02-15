@@ -20,8 +20,11 @@ const voiceToAudio = async ({projectId, userId, audioFile }) => {
     var chatHistory = getChatHistory(projectId, userId);
     console.log("VoiceToAudio.controller chatHistory___", chatHistory)
     if (chatHistory.length === 0) {
+        console.log("VoiceToAudio.controller chatHistory.length === 0___", chatHistory.length)
         chatHistory = getInitialChatHistory(projectId);
+        console.log("VoiceToAudio.controller chatHistory getInitialChatHistory___", chatHistory)
     }
+
     var updatedChatHistory = [...chatHistory, inputObj];
     
     var chatCompletion = await chatCompletions({ messages: updatedChatHistory });
