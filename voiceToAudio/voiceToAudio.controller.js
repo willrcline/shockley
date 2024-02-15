@@ -6,6 +6,7 @@ const { whisper, correctedTranscription } = require('../transcription/transcript
 const { getInitialChatHistory } = require('../helper/chatHistory.js')
 
 const VoiceToAudio = async ({projectId, userId, audioFile }) => {
+    console.log("VoiceToAudio.controller projectId___", projectId)
     var hasEnd = false
     if (projectId === 'JOURNAL_APP_ONBOARDING') {
         hasEnd = true
