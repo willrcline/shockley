@@ -18,6 +18,7 @@ const voiceToAudio = async ({projectId, userId, audioFile }) => {
     
     var inputObj = { "role": "user", "content": correctedTranscript };
     var chatHistory = getChatHistory(projectId, userId);
+    console.log("VoiceToAudio.controller chatHistory___", chatHistory)
     if (chatHistory.length === 0) {
         chatHistory = getInitialChatHistory(projectId);
     }
