@@ -36,7 +36,7 @@ const greetingPrompt = () => {
     By the way I truly care about privacy, all the information provided is totally confidential and stays on your Journal365 account. I have 5 simple questions to get to know each other. Would you like to start?`
 }
 
-const initialChatHistory = [
+const journalAppOnboardingInit = [
   {"role": "system", "content": systemPrompt()},
   {"role": "assistant", "content": greetingPrompt()}
 ]
@@ -89,4 +89,4 @@ const sampleTranscripts = [
   ];
   
 
-module.exports = { systemPrompt, greetingPrompt, infoObjectPrompt, sampleTranscripts, initialChatHistory, customJournalPromptPrompt}
+module.exports = { systemPrompt, greetingPrompt, infoObjectPrompt, sampleTranscripts, journalAppOnboardingInit, customJournalPromptPrompt}
