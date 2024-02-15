@@ -1,37 +1,43 @@
 const { checkEnd } = require('../helper/checkEnd.js');
 const { updateChatHistory, getChatHistory } = require('../helper/cache');
-const { initialChatHistory } = require('../helper/onboardingPromptFactory');
 const { chatCompletions } = require('../../chatCompletions/chatCompletions.controller');
 const { textToSpeech } = require('../../textToSpeech/textToSpeech.controller');
 const { whisper, correctedTranscription } = require('../../transcription/transcription.controller.js')
+const { getInitialChatHistory } = require('../helper/chatHistory.js');
 
-const onboarding = async ({ userId, audioFile }) => {
-    var responseObj = { ended: false, audioBase64: null, chatHistory: null };
+const VoiceToAudio = async ({projectId, userId, audioFile }) => {
+    var hasEnd = false
+    if (projectId === 'JOURNAL_APP_ONBOARDING') {
+        hasEnd = true
+    }
 
     var rawTranscript = await whisper(audioFile);
     var correctedTranscript = await correctedTranscription(rawTranscript);
-    console.log("onboarding.controller correctedTranscript___", correctedTranscript)
-
+    console.log("VoiceToAudio.controller correctedTranscript___", correctedTranscript)
+    
     var inputObj = { "role": "user", "content": correctedTranscript };
-    var chatHistory = getChatHistory(userId);
+    var chatHistory = getChatHistory(projectId, userId);
     if (chatHistory.length === 0) {
-        chatHistory = initialChatHistory;
+        chatHistory = getInitialChatHistory(projectId);
     }
     var updatedChatHistory = [...chatHistory, inputObj];
-
+    
     var chatCompletion = await chatCompletions({ messages: updatedChatHistory });
-    console.log("onboarding.controller chatCompletion___", chatCompletion)
+    console.log("VoiceToAudio.controller chatCompletion___", chatCompletion)
 
-    if (checkEnd(chatCompletion)) {
+    
+    var responseObj = { ended: false, audioBase64: null, chatHistory: null };
+
+    if (hasEnd && checkEnd(chatCompletion)) {
         responseObj.ended = true;
         responseObj.chatHistory = updatedChatHistory;
-        updateChatHistory(userId, []);
+        updateChatHistory(projectId, userId, []);
     } else {
-        updateChatHistory(userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }]);
+        updateChatHistory(projectId, userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }]);
         responseObj.audioBase64 = await textToSpeech({ text: chatCompletion });
     }
 
     return responseObj;
 };
 
-module.exports = { onboarding };
+module.exports = { VoiceToAudio };
