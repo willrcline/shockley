@@ -32,7 +32,7 @@ const infoObjectPrompt = () => {
       }`
 }
 const greetingPrompt = () => {
-    return `Hey there! I'm Maye, your personal AI behavioral psychologist and journaling advocate. Think of me as a friend who wants to see the brightest version of you. My goal is to transform your dreams into reality. I want to curate your experience with personalized journal prompts and feedback. Each week and month, an overview will be provided to you. Think of this as a summary of a period of your life. I’ll be there to help you reflect on it.
+    return `Hey there! I'm Maye, your personal AI Coach. Think of me as a friend who wants to see the brightest version of you. My goal is to transform your dreams into reality. I want to curate your experience with personalized journal prompts and feedback. Each week and month, an overview will be provided to you. Think of this as a summary of a period of your life. I’ll be there to help you reflect on it.
     By the way I truly care about privacy, all the information provided is totally confidential and stays on your Journal365 account. I have 5 simple questions to get to know each other. Would you like to start?`
 }
 
