@@ -6,7 +6,6 @@ const  upload  =  multer();
 const { voiceToAudio } = require('./voiceToAudio.controller')
 
 router.post('/', upload.single('file'), async (req, res) => {
-    console.log("voiceToAudio.route req.query___", req.query)
     const userId = req.query.userId;
     const projectId = req.query.projectId;
     const audioFile = req.file;
