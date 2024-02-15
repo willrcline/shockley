@@ -5,7 +5,7 @@ const { textToSpeech } = require('../textToSpeech/textToSpeech.controller');
 const { whisper, correctedTranscription } = require('../transcription/transcription.controller.js')
 const { getInitialChatHistory } = require('../helper/chatHistory.js')
 
-const VoiceToAudio = async ({projectId, userId, audioFile }) => {
+const voiceToAudio = async ({projectId, userId, audioFile }) => {
     console.log("VoiceToAudio.controller projectId___", projectId)
     var hasEnd = false
     if (projectId === 'JOURNAL_APP_ONBOARDING') {
@@ -41,4 +41,4 @@ const VoiceToAudio = async ({projectId, userId, audioFile }) => {
     return responseObj;
 };
 
-module.exports = { VoiceToAudio };
+module.exports = { voiceToAudio };
