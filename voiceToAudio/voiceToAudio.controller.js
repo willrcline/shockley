@@ -10,6 +10,7 @@ const voiceToAudio = async ({projectId, userId, audioFile }) => {
     var hasEnd = false
     if (projectId === 'JOURNAL_APP_ONBOARDING') {
         hasEnd = true
+        var aiModel = "gpt-4"
     }
 
     var rawTranscript = await whisper(audioFile);
@@ -24,7 +25,7 @@ const voiceToAudio = async ({projectId, userId, audioFile }) => {
 
     var updatedChatHistory = [...chatHistory, inputObj];
     
-    var chatCompletion = await chatCompletions({ messages: updatedChatHistory });
+    var chatCompletion = await chatCompletions({ messages: updatedChatHistory, model: aiModel });
     console.log("VoiceToAudio.controller chatCompletion___", chatCompletion)
 
     
