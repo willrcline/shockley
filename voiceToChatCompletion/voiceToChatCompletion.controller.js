@@ -12,31 +12,31 @@ const voiceToChatCompletion = async ({projectId, userId, audioFile }) => {
 
     var rawTranscript = await whisper(audioFile);
     var correctedTranscript = await correctedTranscription(rawTranscript);
-    console.log("voiceToChatCompletion.controller correctedTranscript___", correctedTranscript)
+    // console.log("voiceToChatCompletion.controller correctedTranscript___", correctedTranscript)
     
     var inputObj = { "role": "user", "content": correctedTranscript };
     var chatHistory = getChatHistory(projectId, userId);
     if (chatHistory.length === 0) {
         chatHistory = getInitialChatHistory(projectId);
-        console.log("voiceToChatCompletion.controller chatHistory___", chatHistory)
+        // console.log("voiceToChatCompletion.controller chatHistory___", chatHistory)
     }
 
     var updatedChatHistory = [...chatHistory, inputObj];
-    console.log("voiceToChatCompletion.controller updatedChatHistory___", updatedChatHistory)
+    // console.log("voiceToChatCompletion.controller updatedChatHistory___", updatedChatHistory)
     
     var chatCompletion = await chatCompletions({ messages: updatedChatHistory });
-    console.log("voiceToChatCompletion.controller chatCompletion___", chatCompletion)
-
+    
     
     var responseObj = { ended: false, chatCompletion: null, chatHistory: null };
     responseObj.chatCompletion = chatCompletion;
-
+    
     if (hasEnd && checkEnd(chatCompletion)) {
         responseObj.ended = true;
         responseObj.chatHistory = updatedChatHistory;
         updateChatHistory(projectId, userId, []);
     } else {
         updateChatHistory(projectId, userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }]);
+        console.log("voiceToChatCompletion.controller updatedChatHistory2___", [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }])
     }
 
     return responseObj;
