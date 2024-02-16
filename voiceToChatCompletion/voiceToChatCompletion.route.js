@@ -6,6 +6,9 @@ const  upload  =  multer();
 const { voiceToChatCompletion } = require('./voiceToChatCompletion.controller')
 
 router.post('/', upload.single('file'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+      }
     const userId = req.query.userId;
     const projectId = req.query.projectId;
     const audioFile = req.file;
