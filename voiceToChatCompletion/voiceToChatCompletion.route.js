@@ -15,6 +15,7 @@ router.post('/', upload.single('file'), async (req, res) => {
 
     try { 
         var responseObj = await voiceToChatCompletion({projectId, userId, audioFile});
+        console.log("voiceToChatCompletion.route responseObj___", responseObj)
         res.status(200).send(responseObj);
 
     } catch (error) {
