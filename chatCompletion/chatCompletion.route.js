@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const  upload  =  multer();
 const { chatCompletion } = require('./chatCompletion.controller')
 
 router.post('/', async (req, res) => {
