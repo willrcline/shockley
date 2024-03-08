@@ -3,7 +3,7 @@ const router = express.Router()
 const { chatCompletion } = require('./chatCompletion.controller')
 
 router.post('/', async (req, res) => {
-    const {chatHistory} = request.body.data;
+    const {chatHistory} = req.body.data;
 
     try { 
         var chatCompletion = await chatCompletion({messages});
