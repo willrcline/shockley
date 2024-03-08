@@ -1,6 +1,6 @@
 const { checkEnd } = require('../helper/checkEnd.js');
 const { updateChatHistory, getChatHistory } = require('../helper/cache.js');
-const { chatCompletions } = require('../chatCompletions/chatCompletions.controller.js')
+const { chatCompletion } = require('../chatCompletion/chatCompletion.controller.js')
 const { textToSpeech } = require('../textToSpeech/textToSpeech.controller.js');
 const { whisper, correctedTranscription } = require('../transcription/transcription.controller.js')
 const { getInitialChatHistory } = require('../helper/chatHistory.js')
@@ -24,7 +24,7 @@ const voiceToChatCompletion = async ({projectId, userId, audioFile }) => {
     var updatedChatHistory = [...chatHistory, inputObj];
     // console.log("voiceToChatCompletion.controller updatedChatHistory___", updatedChatHistory)
     
-    var chatCompletion = await chatCompletions({ messages: updatedChatHistory });
+    var chatCompletion = await chatCompletion({ messages: updatedChatHistory });
     
     
     var responseObj = { ended: false, chatCompletion: null, chatHistory: null };

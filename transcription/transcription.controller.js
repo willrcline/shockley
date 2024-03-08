@@ -1,7 +1,7 @@
 const  FormData  =  require('form-data');
 const { Readable } =  require('stream');
 const  axios  =  require('axios');
-const { chatCompletions } = require('../chatCompletions/chatCompletions.controller');
+const { chatCompletion } = require('../chatCompletion/chatCompletion.controller');
 
 const  bufferToStream  = (buffer) => {
     return  Readable.from(buffer);
@@ -39,7 +39,7 @@ const correctedTranscription = async (transcript) => {
     }
   ]
 
-  var correctedTranscript = await chatCompletions({messages: messages});
+  var correctedTranscript = await chatCompletion({messages: messages});
   return correctedTranscript
 }
 module.exports = {whisper, correctedTranscription}
