@@ -1,6 +1,6 @@
 const OpenAI = require("openai");;
 
-const chatCompletions = async ({messages, model="gpt-3.5-turbo"}) => {
+const chatCompletion = async ({messages, model="gpt-3.5-turbo"}) => {
 
     const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 
@@ -12,4 +12,4 @@ const chatCompletions = async ({messages, model="gpt-3.5-turbo"}) => {
     return responseContent
 }
 
-module.exports = {chatCompletions}
+module.exports = {chatCompletion}
