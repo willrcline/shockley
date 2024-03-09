@@ -3,10 +3,11 @@ const router = express.Router()
 const { chatCompletion } = require('./chatCompletion.controller')
 
 router.post('/', async (req, res) => {
+    console.log("chatCompletion.route req.body___", req.body)
     const {chatHistory} = req.body.data;
 
     try { 
-        var chatCompletion = await chatCompletion({messages});
+        var chatCompletion = await chatCompletion({messages: chatHistory});
         console.log("voiceToChatCompletion.route responseObj___", responseObj)
         res.status(200).send(chatCompletion);
 
