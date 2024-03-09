@@ -24,13 +24,13 @@ const voiceToChatCompletion = async ({projectId, userId, audioFile }) => {
     var updatedChatHistory = [...chatHistory, inputObj];
     // console.log("voiceToChatCompletion.controller updatedChatHistory___", updatedChatHistory)
     
-    var chatCompletion = await chatCompletion({ messages: updatedChatHistory });
+    var completion = await chatCompletion({ messages: updatedChatHistory });
     
     
     var responseObj = { ended: false, chatCompletion: null, chatHistory: null };
-    responseObj.chatCompletion = chatCompletion;
+    responseObj.chatCompletion = completion;
     
-    if (hasEnd && checkEnd(chatCompletion)) {
+    if (hasEnd && checkEnd(completion)) {
         responseObj.ended = true;
         responseObj.chatHistory = updatedChatHistory;
         updateChatHistory(projectId, userId, []);
