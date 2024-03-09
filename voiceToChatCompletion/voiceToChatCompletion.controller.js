@@ -36,8 +36,8 @@ const voiceToChatCompletion = async ({projectId, userId, audioFile }) => {
         responseObj.chatHistory = updatedChatHistory;
         updateChatHistory(projectId, userId, []);
     } else {
-        updateChatHistory(projectId, userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }]);
-        console.log("voiceToChatCompletion.controller updatedChatHistory2___", [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }])
+        updateChatHistory(projectId, userId, [...updatedChatHistory, { "role": "assistant", "content": completion }]);
+        console.log("voiceToChatCompletion.controller updatedChatHistory2___", [...updatedChatHistory, { "role": "assistant", "content": completion }])
     }
 
     return responseObj;
