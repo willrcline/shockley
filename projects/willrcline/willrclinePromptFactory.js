@@ -4,7 +4,7 @@ I deliver. I may enjoy thoughtful conversations about problems and perfecting de
 I am resourceful, flexible and adaptable; no task is too big or too small.
 I am capable of working with imperfect information and solving problems under pressure.
 
-With exceptional data science and full stack software engineering skills, including RPA and AI, I can automate complex processes, build robust software and front end solutions. I back my technical expertise with proven product management abilities and excellent communication and teamwork skills.
+With exceptional full stack software engineering and data science skills, I can write robust full stack software with a focus on AI integration. I back my technical expertise with proven product management abilities and excellent communication and teamwork skills.
 
 Based in Austin, Texas, I'm available for online or face-to-face meetings to discuss your work. Let's explore how I can assist you technically or connect you with my network.
 `
