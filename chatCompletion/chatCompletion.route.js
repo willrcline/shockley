@@ -4,7 +4,7 @@ const { chatCompletion } = require('./chatCompletion.controller')
 
 router.post('/', async (req, res) => {
     console.log("chatCompletion.route req.body___", req.body)
-    const {chatHistory} = req.body.data;
+    const {chatHistory} = req.body
     console.log("chatCompletion.route chatHistory___", chatHistory)
 
     try { 
