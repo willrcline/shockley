@@ -7,6 +7,7 @@ const { getInitialChatHistory } = require('../helper/chatHistory.js')
 
 const voiceToChatCompletion = async ({projectId, userId, audioFile }) => {
     console.log("voiceToChatCompletion.controller projectId___", projectId)
+    console.log("voiceToChatCompletion.controller userId___", userId)
     if (projectId === 'WILLRCLINE.COM') {}
     var hasEnd = false
 
@@ -25,7 +26,7 @@ const voiceToChatCompletion = async ({projectId, userId, audioFile }) => {
     // console.log("voiceToChatCompletion.controller updatedChatHistory___", updatedChatHistory)
     
     var completion = await chatCompletion({ messages: updatedChatHistory });
-    
+    console.log("voiceToChatCompletion.controller completion___", completion)
     
     var responseObj = { ended: false, chatCompletion: null, chatHistory: null };
     responseObj.chatCompletion = completion;
