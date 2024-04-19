@@ -12,7 +12,8 @@ async function getEntries(userId) {
       .orderBy("dateCreated", "desc")
       .get();
 
-    const docs = snapshot.docs.slice(0, 3);
+    // const docs = snapshot.docs.slice(0, 3);
+    const docs = snapshot.docs
     console.log(docs.map(doc => doc.data()))
     return docs.map(doc => doc.data());
   } catch (e) {

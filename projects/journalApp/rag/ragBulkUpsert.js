@@ -1,5 +1,7 @@
 const { fragmentText } = require("../../../fragmentText/fragmentText.controller");
 const { getEntries, setEntry } = require('../database/entries')
+const { embeddings} = require('../../../embeddings/embeddings.controller')
+const { vectorUpsert } = require('../../../vectorUpsert/vectorUpsert.controller')
 
 //makes fragments and saves them for multiple entries of a user
 const bulkFragment = async (entries) => {
@@ -40,5 +42,9 @@ const ragBulkUpsert = async (userId)  => {
 
   await vectorUpsert("entries", userId, upsertData)
 }
+
+const userId = 'f5bb39e3-fd12-4aee-9788-882a9e587ee9'
+
+ragBulkUpsert(userId)
 
 module.exports = { ragBulkUpsert };

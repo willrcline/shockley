@@ -13,8 +13,11 @@ const vectorQuery = async (indexName, namespace, vector) => {
     includeMetadata: true,
   });
 
-  // console.log(result.);
-  return result;
+  const matches = result.matches;
+  // console.log(matches);
+  console.log(matches[0].metadata)
+
+  return matches;
 
 }
 
