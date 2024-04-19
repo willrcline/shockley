@@ -7,14 +7,13 @@ const vectorQuery = async (indexName, namespace, vector) => {
   const index = pc.index(indexName)
 
   const result = await index.namespace(namespace).query({
-    topK: 2,
+    topK: 3,
     vector: vector,
     includeValues: true,
     includeMetadata: true,
-    // filter: { genre: { '$eq': 'action' }}
   });
 
-  console.log(result);
+  // console.log(result.);
   return result;
 
 }
