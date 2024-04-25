@@ -1,7 +1,7 @@
 require('dotenv').config()
 const OpenAI = require("openai");
 
-const chatCompletion = async ({messages, model="gpt-3.5-turbo", json_object=false}) => {
+const chatCompletion = async ({messages, model="gpt-4-turbo", json_object=false}) => {
 
     const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 
