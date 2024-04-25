@@ -16,12 +16,12 @@ async function ragQuery(userId, query, topK = 3) {
   var matchArray = []
   for (const vector of matchingVectors) {
     const entryId = vector.metadata.entryId
-    const fragmentIndex = vector.metadata.fragmentIndex
+    const chunkIndex = vector.metadata.chunkIndex
     const entry = await getEntry(entryId)
-    const matchingFragment = entry.fragments[fragmentIndex]
+    const matchingChunk = entry.chunks[chunkIndex]
     const matchObj = {
       score: vector.score,
-      fragment: matchingFragment
+      chunk: matchingChunk
     }
     matchArray.push(matchObj)
   }

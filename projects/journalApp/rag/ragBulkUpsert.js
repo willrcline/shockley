@@ -1,33 +1,32 @@
-const { fragmentText } = require("../../../fragmentText/fragmentText.controller");
+const { chunkText } = require("../../../chunkText/chunkText.controller");
 const { getEntries, setEntry } = require('../database/entries')
 const { getUser } = require('../database/user')
 const { embeddings} = require('../../../embeddings/embeddings.controller')
 const { vectorUpsert } = require('../../../vectorUpsert/vectorUpsert.controller')
 
-//makes fragments and saves them for multiple entries of a user
-const bulkFragment = async (entries, prompts) => {
+//makes chunks and saves them for multiple entries of a user
+const bulkChunk = async (entries, prompts) => {
   for (const entry of entries) {
     const prompt = prompts.find((prompt) => prompt.promptID === entry.promptID)
-    const entryFragmented = await fragmentText(entry, prompt.text)
-    entry.fragments = entryFragmented.fragments
+    const entryChunked = await chunkText(entry, prompt.text)
+    entry.chunks = entryChunked.chunks
     await setEntry(entry);
   }
 }
 
-const bulkEmbed = async (entriesWithFragments) => {
+const bulkEmbed = async (entriesWithChunks) => {
   var upsertData = []
-    for (const entryFragmented of entriesWithFragments) {
-      // console.log(entryFragmented.fragments)
-      const embeddingsArray = await embeddings(entryFragmented.fragments)
+    for (const entryChunked of entriesWithChunks) {
+      const embeddingsArray = await embeddings(entryChunked.chunks)
 
-      const upsertDataRows = embeddingsArray.map((fragment, i) => {
+      const upsertDataRows = embeddingsArray.map((chunk, i) => {
         return {
-          id: `${entryFragmented.id}-[${i}]`,
+          id: `${entryChunked.id}-[${i}]`,
           values: embeddingsArray[i].embedding,
           metadata: {
             userId,
-            entryId: entryFragmented.id,
-            fragmentIndex: i
+            entryId: entryChunked.id,
+            chunkIndex: i
           },
         };
       })
@@ -40,9 +39,9 @@ const ragBulkUpsert = async (userId, userEmail)  => {
   const entries = await getEntries(userId);
   const user = await getUser(userEmail)
   const prompts = user.prompts
-  await bulkFragment(entries, prompts)
-  const entriesWithFragments = await getEntries(userId);
-  const upsertData = await bulkEmbed(entriesWithFragments)
+  await bulkChunk(entries, prompts)
+  const entriesWithChunks = await getEntries(userId);
+  const upsertData = await bulkEmbed(entriesWithChunks)
 
   await vectorUpsert("entries", userId, upsertData)
 }
@@ -50,12 +49,12 @@ const userId = 'f5bb39e3-fd12-4aee-9788-882a9e587ee9'
 const userEmail = 'willrcline.atx@gmail.com'
 
 const run = async () => {
-  const entries = (await getEntries(userId)).slice(1, 6);
+  const entries = (await getEntries(userId)).slice(1, 9);
   const user = await getUser(userEmail)
   const prompts = user.prompts
-  await bulkFragment(entries, prompts)
-  const entriesWithFragments = (await getEntries(userId)).slice(1, 6);
-  console.log(entriesWithFragments)
+  await bulkChunk(entries, prompts)
+  const entriesWithChunks = (await getEntries(userId)).slice(1, 9);
+  console.log(entriesWithChunks)
 }
 
 run()
