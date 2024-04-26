@@ -29,6 +29,8 @@ async function ragQuery(userId, query, topK = 3) {
   return matchArray
 }
 
+module.exports = { ragQuery }
 
 
-ragQuery(userId, query, 7)
+
+// ragQuery(userId, query, 7)

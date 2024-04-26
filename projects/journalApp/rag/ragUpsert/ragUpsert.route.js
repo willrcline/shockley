@@ -7,9 +7,8 @@ router.post('/', async (req, res) => {
   const {userId, userEmail, entryId} = req.body
 
   try { 
-      var completion = await ragUpsert(userId, userEmail, entryId);
-      console.log("ragUpsert.route completion___", completion)
-      res.status(200).send(completion);
+      var response = await ragUpsert(userId, userEmail, entryId);
+      res.status(200).send(response);
 
   } catch (error) {
       console.error("ragUpsert.route error___", error);

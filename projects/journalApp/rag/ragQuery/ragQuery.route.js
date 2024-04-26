@@ -4,12 +4,11 @@ const { ragQuery } = require('./ragQuery.controller')
 
 router.post('/', async (req, res) => {
   console.log("ragQuery.route req.body___", req.body)
-  const {userId} = req.body
+  const {userId, query, topK = 3} = req.body
 
   try { 
-      var completion = await ragQuery(userId, userEmail, entryId);
-      console.log("ragQuery.route completion___", completion)
-      res.status(200).send(completion);
+      var response = await ragQuery(userId, query, topK);
+      res.status(200).send(response);
 
   } catch (error) {
       console.error("ragQuery.route error___", error);
