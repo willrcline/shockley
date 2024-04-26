@@ -3,12 +3,13 @@ const { getEntries, setEntry } = require('../database/entries')
 const { getUser } = require('../database/user')
 const { embeddings} = require('../../../embeddings/embeddings.controller')
 const { vectorUpsert } = require('../../../vectorUpsert/vectorUpsert.controller')
+const { vectorNamespaceDelete } = require('../../../vectorDelete/vectorDelete.controller')
 
 //makes chunks and saves them for multiple entries of a user
 const bulkChunk = async (entries, prompts) => {
   for (const entry of entries) {
     const prompt = prompts.find((prompt) => prompt.promptID === entry.promptID)
-    const entryChunked = await chunkText(entry, prompt.text)
+    const entryChunked = await chunkText(entry, prompt.text? prompt.text : "")
     entry.chunks = entryChunked.chunks
     await setEntry(entry);
   }
@@ -21,7 +22,7 @@ const bulkEmbed = async (entriesWithChunks) => {
 
       const upsertDataRows = embeddingsArray.map((chunk, i) => {
         return {
-          id: `${entryChunked.id}-[${i}]`,
+          id: `${entryChunked.id}#chunk${i}`,
           values: embeddingsArray[i].embedding,
           metadata: {
             userId,
@@ -43,6 +44,7 @@ const ragBulkUpsert = async (userId, userEmail)  => {
   const entriesWithChunks = await getEntries(userId);
   const upsertData = await bulkEmbed(entriesWithChunks)
 
+  await vectorNamespaceDelete("entries", userId)
   await vectorUpsert("entries", userId, upsertData)
 }
 const userId = 'f5bb39e3-fd12-4aee-9788-882a9e587ee9'
