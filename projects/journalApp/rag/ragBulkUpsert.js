@@ -47,10 +47,9 @@ const ragBulkUpsert = async (userId, userEmail)  => {
   await vectorNamespaceDelete("entries", userId)
   await vectorUpsert("entries", userId, upsertData)
 }
-const userId = 'f5bb39e3-fd12-4aee-9788-882a9e587ee9'
-const userEmail = 'willrcline.atx@gmail.com'
 
-const run = async () => {
+
+const testChunk = async () => {
   const entries = (await getEntries(userId)).slice(1, 9);
   const user = await getUser(userEmail)
   const prompts = user.prompts
@@ -58,8 +57,6 @@ const run = async () => {
   const entriesWithChunks = (await getEntries(userId)).slice(1, 9);
   console.log(entriesWithChunks)
 }
-
-run()
 
 // ragBulkUpsert(userId, userEmail)
 

@@ -3,7 +3,6 @@ const router = express.Router()
 const { ragQuery } = require('./ragQuery.controller')
 
 router.post('/', async (req, res) => {
-  console.log("ragQuery.route req.body___", req.body)
   const {userId, query, topK = 3} = req.body
 
   try { 

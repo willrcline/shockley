@@ -3,7 +3,6 @@ const router = express.Router()
 const { ragUpsert } = require('./ragUpsert.controller')
 
 router.post('/', async (req, res) => {
-  console.log("ragUpsert.route req.body___", req.body)
   const {userId, userEmail, entryId} = req.body
 
   try { 
