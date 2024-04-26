@@ -29,7 +29,7 @@ const ragEmbed = async (entryChunked) => {
   return upsertDataRows
 }
 
-async function ragUpsert(userId, entryId, userEmail) {
+async function ragUpsert(userId, userEmail, entryId) {
   const entry = await getEntry(entryId);
   const user = await getUser(userEmail)
   const prompts = user.prompts
