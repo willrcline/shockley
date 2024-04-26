@@ -1,16 +1,3 @@
-const sentences = `
-You're assisting in breaking down a journal entry into individual sentences. The entry might lack grammatical correctness, so you'll need to determine suitable places to break even in the absence of periods.
-
-Instructions:
-1. Only include sentences which actually stand alone as a full sentence (it doesn't have to be a gramatically perfect sentence but it should atleast have a subject and a verb implied in there). Just omit things that are just a few words or less or don't make sense on their own. If there is nothing in the entry that qualifies as a sentence, return an empty array.
-2. Remove any journal prompts. The prompt text will be enclosed in div tags with the property "color: #ada8a8". The prompt could span multiple lines, with actual content in between. Sometimes prompt text will be inline with content text. Regardless, remove all of these div tags and their contents.
-3. Ensure that you're not modifying the content itself; only break it into chunks that roughly correspond to sentences. 
-4. Remove any HTML tags present in the entry.
-5. Return the chunks as a JSON object with two fields:
-   - entryId: The ID of the journal entry.
-   - chunks: An array of strings, each representing a fragment of the entry.
-`
-
 const optionalFragmenting = (promptText) => `
 Break down journal entries into chunks based on distinct topics. Only break it apart if there are stark differences in the topics covered. 90% of the time, you'll return the entry as a single chunk:
 
@@ -23,15 +10,6 @@ Break down journal entries into chunks based on distinct topics. Only break it a
   6. Return the Chunk(s) as a JSON object with two fields:
    - entryId: The ID of the journal entry.
    - chunks: An array of strings, each representing a chunk of the entry (there will probably be just one).
-`
-
-const multipleSentences = `
-Break down journal entries into chunks of about 3 adjacent sentences each:
-  1. Remove html tags.
-  2. Remove the journal prompt.
-  3. Return the Chunks as a JSON object with two fields:
-   - entryId: The ID of the journal entry.
-   - chunks: An array of strings, each representing a chunk of the entry (there might be just one).
 `
 
 const extractTagRelatedContent = (tags) => `
@@ -73,11 +51,8 @@ const tagObjs = [
 
 const makeChatInput = (body, entryId, promptText) => {
   const assistantPrompt = `entryId: ${entryId}`
-  // console.log(extractTagRelatedContent(JSON.stringify(tagObjs, null, 2)))
 
   return [
-    // {"role": "system", "content": extractTagRelatedContent(JSON.stringify(tagObjs, null, 2))},
-    // { "role": "system", "content": multipleSentences },
     { "role": "system", "content": optionalFragmenting(promptText) },
     { "role": "assistant", "content": assistantPrompt },
     { "role": "user", "content": body }
