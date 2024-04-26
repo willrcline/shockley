@@ -2,6 +2,9 @@ require('dotenv').config()
 const { embeddings } = require("../../../../embeddings/embeddings.controller");
 const { vectorDocDelete } = require('../../../../vectorDelete/vectorDelete.controller');
 const { vectorUpsert } = require("../../../../vectorUpsert/vectorUpsert.controller")
+const { getEntry, setEntry } = require('../../database/entries')
+const { getUser } = require('../../database/user')
+const { chunkText } = require('../../../../chunkText/chunkText.controller')
 
 const userId = 'f5bb39e3-fd12-4aee-9788-882a9e587ee9'
 const entryId = '36fea420-8f66-481e-8a27-b5ac5bc13110'
@@ -17,7 +20,7 @@ const ragEmbed = async (entryChunked) => {
 
   const upsertDataRows = embeddingsArray.map((chunk, i) => {
     return {
-      id: `${entryChunked.id}#chunk${i}`,
+      id: `${entryChunked.id}#chunk${i+1}`,
       values: embeddingsArray[i].embedding,
       metadata: {
         userId,
@@ -38,7 +41,9 @@ async function ragUpsert(userId, userEmail, entryId) {
   const entryChunked = await getEntry(entryId);
   const upsertData = await ragEmbed(entryChunked)
 
-  await vectorDocDelete('entries', userId, entryId)
+  try {
+    await vectorDocDelete('entries', userId, entryId)
+  } catch (error) {}
   await vectorUpsert('entries', userId, upsertData)
 }
 

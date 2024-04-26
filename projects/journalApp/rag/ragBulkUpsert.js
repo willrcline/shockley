@@ -22,7 +22,7 @@ const bulkEmbed = async (entriesWithChunks) => {
 
       const upsertDataRows = embeddingsArray.map((chunk, i) => {
         return {
-          id: `${entryChunked.id}#chunk${i}`,
+          id: `${entryChunked.id}#chunk${i+1}`,
           values: embeddingsArray[i].embedding,
           metadata: {
             userId,
