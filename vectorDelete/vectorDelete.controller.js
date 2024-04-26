@@ -18,4 +18,7 @@ const vectorNamespaceDelete = async (indexName, namespace) => {
   const index = pc.index(indexName)
   await index.namespace(namespace).deleteAll();
 }
+
+// vectorNamespaceDelete('entries', 'f5bb39e3-fd12-4aee-9788-882a9e587ee9');
+
 module.exports = { vectorDocDelete, vectorNamespaceDelete };
