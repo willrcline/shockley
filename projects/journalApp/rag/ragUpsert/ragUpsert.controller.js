@@ -7,9 +7,6 @@ const { getUser } = require('../../database/user')
 const { chunkText } = require('../../../../chunkText/chunkText.controller')
 const { convertTimestampToInt } = require('../../utils/datetime')
 
-const userId = 'f5bb39e3-fd12-4aee-9788-882a9e587ee9'
-const entryId = '36fea420-8f66-481e-8a27-b5ac5bc13110'
-
 async function ragChunk (entry, prompt) {
   const entryChunked = await chunkText(entry, prompt.text? prompt.text : "")
   entry.chunks = entryChunked.chunks
