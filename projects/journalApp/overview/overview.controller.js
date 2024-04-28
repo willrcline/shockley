@@ -24,9 +24,9 @@ const overview = async (userId, periodId, sectionId) => {
       const messages = [{ "role": "system", "content": llmPrompt}]
       const completion = await chatCompletion({messages: messages, json_object: true})
       const completionJson = JSON.parse(completion);
-      
+    
       console.log("overview.controller achievements completionJson___", completionJson)
-      return completionJson;
+      //save the overview to the database in the period object
       break;
     case 'visualized':
       break;
