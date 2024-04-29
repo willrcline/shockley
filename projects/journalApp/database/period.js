@@ -113,4 +113,4 @@ getCurrentPeriod('week', 'f5bb39e3-fd12-4aee-9788-882a9e587ee9')
 // deletePeriodsByUserId('f5bb39e3-fd12-4aee-9788-882a9e587ee9')
   
 
-module.exports = { getPeriods, getPeriod, setPeriod, bulkAddPeriods };
+module.exports = { getPeriods, getPeriod, setPeriod, bulkAddPeriods, getCurrentPeriod, deletePeriodsByUserId };

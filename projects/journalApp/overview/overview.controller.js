@@ -3,6 +3,7 @@ const llmPrompts = require('./llmPrompts.js');
 const { ragQuery } = require('../rag/ragQuery/ragQuery.controller.js');
 const { convertTimestampToInt } = require('../utils/datetime.js')
 const { chatCompletion } = require('../../../chatCompletion/chatCompletion.controller.js');
+const { getCurrentPeriod } = require('../database/period.js');
 
 const overview = async (userId, periodId, sectionId) => {
   const period = await getPeriod(periodId);
@@ -24,6 +25,7 @@ const overview = async (userId, periodId, sectionId) => {
       const messages = [{ "role": "system", "content": llmPrompt}]
       const completion = await chatCompletion({messages: messages, json_object: true})
       const completionJson = JSON.parse(completion);
+      
     
       console.log("overview.controller achievements completionJson___", completionJson)
       //save the overview to the database in the period object
