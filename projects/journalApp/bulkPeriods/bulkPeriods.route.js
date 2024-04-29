@@ -1,18 +1,20 @@
 const express = require('express')
 const router = express.Router()
-const { overview } = require('./overview.controller')
+const { bulkPeriods } = require('./bulkPeriods.controller')
 
 router.post('/', async (req, res) => {
-  const {userId, periodId, sectionId} = req.body
+  const {userId} = req.body
 
   try { 
-      var response = await overview(userId, periodId, sectionId);
+      var response = await bulkPeriods(userId);
       res.status(200).send(response);
 
   } catch (error) {
-      console.error("overview.route error___", error);
+      console.error("bulkPeriods.route error___", error);
       res.status(500).send({error: 'Unexpected error processing request.'});
   }
 })
+
+
 
 module.exports = router
