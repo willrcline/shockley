@@ -18,7 +18,8 @@ async function ragQuery(userId, query, topK = 3, filter=null) {
     const matchingChunk = entry.chunks[chunkIndex]
     const matchObj = {
       score: vector.score,
-      chunk: matchingChunk
+      chunk: matchingChunk,
+      dateCreated: entry.dateCreated
     }
     matchArray.push(matchObj)
   }

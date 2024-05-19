@@ -14,7 +14,7 @@ const llmPrompts = {
     ]
 
     Journal entry data:
-    ${data}
+  ${data}
   `,
 
   visualized: (periodType, data) => `

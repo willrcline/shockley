@@ -20,21 +20,33 @@ const overview = async (userId, periodId, sectionId) => {
       break;
     case 'achievements':
       const vectorPrompt = `achievement or accomplishment attained`
-      // const matches = await ragQuery(userId, vectorPrompt, vectorFilter)
-      const matches = await ragQuery(userId, vectorPrompt)
-      console.log("overview.controller achievements matches___", matches)
+      const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
+      // const matches = await ragQuery(userId, vectorPrompt)
       // const matches = [{score: 1, chunk: 'test chunk'}]
+      const matchesText = matches
+        .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate()) // Sort by date in descending order
+        .map(match => {
+            const dateStr = match.dateCreated.toDate().toLocaleString(); // Convert Firestore timestamp to Date and format it
+            return `${dateStr}\n${match.chunk}\n`; // Combine date and chunk with separation
+        })
+        .join('\n'); // Join all entries into one big string
 
-      // const llmPrompt = llmPrompts.achievements(periodType, matches);
-      // const messages = [{ "role": "system", "content": llmPrompt}]
-      // const completion = await chatCompletion({messages: messages, json_object: true})
-      // const completionJson = JSON.parse(completion);
-      // const overviewSectionValue = completionJson.achievements 
-      // console.log("overview.controller achievements completionJson___", completionJson)
+      console.log("overview.controller achievements matchesText___", matchesText)
 
-      // await setOverview(userId, periodId, sectionId, overviewSectionValue)
+    
+      const llmPrompt = llmPrompts.achievements(periodType, matchesText);
+      console.log("overview.controller achievements llmPrompt___", llmPrompt)
+      const messages = [{ "role": "system", "content": llmPrompt}]
+      const completion = await chatCompletion({messages: messages, json_object: true})
+      const completionJson = JSON.parse(completion);
+      console.log("overview.controller achievements completionJson___", completionJson)
 
-      // return 'success'
+
+      const overviewSectionValue = completionJson.achievements 
+
+      await setOverview(userId, periodId, sectionId, overviewSectionValue)
+
+      return 'success'
 
       break;
     case 'visualized':
