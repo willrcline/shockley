@@ -3,7 +3,6 @@ const { db } = require('../../../firebase/connection.js');
 const OVERVIEW_COLLECTION = 'overviews';
 
 const setOverview = async (userId, periodId, sectionId, newSectionValue) => {
-  console.log("setOverview userId, periodId, sectionId, newSectionValue___", userId, periodId, sectionId, newSectionValue);
 
   const overviewsRef = db.collection(OVERVIEW_COLLECTION);
   const query = overviewsRef.where('userId', '==', userId).where('periodId', '==', periodId);

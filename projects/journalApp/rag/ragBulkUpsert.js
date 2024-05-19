@@ -47,16 +47,12 @@ const bulkEmbed = async (entriesWithChunks) => {
 }
 
 const ragBulkUpsert = async (userId, userEmail)  => {
-  console.log("ragBulkUpsert___", userId, userEmail)
   const entries = (await getEntries(userId)).slice(1, 20);
   const user = await getUser(userEmail)
   const prompts = user.prompts
   await bulkChunk(entries, prompts)
-  console.log("bulkChunk done")
   const entriesWithChunks = (await getEntries(userId)).slice(1, 20);
-  console.log("entriesWithChunks___", entriesWithChunks.length)
   const upsertData = await bulkEmbed(entriesWithChunks, userId)
-  console.log("upsertData___", upsertData.length)
 
   await vectorNamespaceDelete("entries", userId)
   await vectorUpsert("entries", userId, upsertData)

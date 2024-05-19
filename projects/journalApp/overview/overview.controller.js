@@ -21,34 +21,25 @@ const overview = async (userId, periodId, sectionId) => {
     case 'achievements':
       const vectorPrompt = `achievement or accomplishment attained`
       const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
-      // const matches = await ragQuery(userId, vectorPrompt)
-      // const matches = [{score: 1, chunk: 'test chunk'}]
       const matchesText = matches
-        .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate()) // Sort by date in descending order
+        .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
         .map(match => {
-            const dateStr = match.dateCreated.toDate().toLocaleString(); // Convert Firestore timestamp to Date and format it
-            return `${dateStr}\n${match.chunk}\n`; // Combine date and chunk with separation
+            const dateStr = match.dateCreated.toDate().toLocaleString(); 
+            return `${dateStr}\n${match.chunk}\n`;
         })
-        .join('\n'); // Join all entries into one big string
-
-      console.log("overview.controller achievements matchesText___", matchesText)
+        .join('\n');
 
     
       const llmPrompt = llmPrompts.achievements(periodType, matchesText);
-      console.log("overview.controller achievements llmPrompt___", llmPrompt)
       const messages = [{ "role": "system", "content": llmPrompt}]
       const completion = await chatCompletion({messages: messages, json_object: true})
       const completionJson = JSON.parse(completion);
-      console.log("overview.controller achievements completionJson___", completionJson)
-
 
       const overviewSectionValue = completionJson.achievements 
 
       await setOverview(userId, periodId, sectionId, overviewSectionValue)
 
       return 'success'
-
-      break;
     case 'visualized':
       break;
     case 'quotes':
