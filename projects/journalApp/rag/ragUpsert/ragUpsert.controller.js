@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { embeddings } = require("../../../../embeddings/embeddings.controller");
+const { embedding } = require("../../../../embedding/embedding.controller");
 const { vectorDocDelete } = require('../../../../vectorDelete/vectorDelete.controller');
 const { vectorUpsert } = require("../../../../vectorUpsert/vectorUpsert.controller")
 const { getEntry, setEntry } = require('../../database/entries')
@@ -15,12 +15,12 @@ async function ragChunk (entry, prompt) {
 
 const ragEmbed = async (entryChunked) => {
   const dateCreatedInt = convertTimestampToInt(entryChunked.dateCreated)
-  const embeddingsArray = await embeddings(entryChunked.chunks)
+  const embeddingArray = await embedding(entryChunked.chunks)
 
-  const upsertDataRows = embeddingsArray.map((chunk, i) => {
+  const upsertDataRows = embeddingArray.map((chunk, i) => {
     return {
       id: `${entryChunked.id}#chunk${i+1}`,
-      values: embeddingsArray[i].embedding,
+      values: embeddingArray[i].embedding,
       metadata: {
         userId,
         entryId: entryChunked.id,

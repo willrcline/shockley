@@ -1,14 +1,14 @@
 require('dotenv').config({path: '../../../../.env'})
-const { embeddings } = require("../../../../embeddings/embeddings.controller");
+const { embedding } = require("../../../../embedding/embedding.controller");
 const { vectorQuery } = require("../../../../vectorQuery/vectorQuery.controller");
 const { getEntry, setEntry } = require('../../database/entries')
 
 async function ragQuery(userId, query, topK = 3, filter=null) {
   
   const arrayToEmbed = [query]
-  const embeddingsArray = await embeddings(arrayToEmbed)
+  const embeddingArray = await embedding(arrayToEmbed)
 
-  const matchingVectors = await vectorQuery("entries", userId, embeddingsArray[0].embedding, topK, filter)
+  const matchingVectors = await vectorQuery("entries", userId, embeddingArray[0].embedding, topK, filter)
   
   var matchArray = []
   for (const vector of matchingVectors) {

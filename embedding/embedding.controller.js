@@ -3,11 +3,11 @@ const OpenAI = require("openai");
 
 const openai = new OpenAI({apiKey: process.env.OPENAI_API_KEY});
 
-const embeddings = async (inputArray) => {
+const embedding = async (input) => {
 
   const embedding = await openai.embeddings.create({
     model: "text-embedding-3-small",
-    input: inputArray,
+    input: input,
     encoding_format: "float",
   });
 
@@ -15,4 +15,4 @@ const embeddings = async (inputArray) => {
   return embedding.data
 }
 
-module.exports = { embeddings };
+module.exports = { embedding };

@@ -3,8 +3,7 @@ const llmPrompts = {
     Instructions:
     Looking at the user's journal entries from the past ${periodType}, extract 3 achievements that the user has made that are truly worthy of celebration. It should feel sort of like a video game achievement, but based on their real-life accomplishments.
 
-    Return the three achievements in JSON format with two fields:
-    - overviewType: "achievements"
+    Return the three achievements in JSON format with one field:
     - achievements: [
       {
         'emoji': [an actual emoji that represents the achievement],

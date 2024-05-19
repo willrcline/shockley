@@ -1,6 +1,7 @@
 const { Pinecone } = require('@pinecone-database/pinecone')
 
 const vectorUpsert = async (indexName, namespace, data) => {
+  console.log("vectorUpsert indexName, namespace, data___", indexName, namespace, data)
   const pc = new Pinecone({
     apiKey: '8575d620-1a8a-4048-87e6-2fcf40578569'
   });

@@ -4,6 +4,7 @@ const { ragQuery } = require('../rag/ragQuery/ragQuery.controller.js');
 const { convertTimestampToInt } = require('../utils/datetime.js')
 const { chatCompletion } = require('../../../chatCompletion/chatCompletion.controller.js');
 const { getCurrentPeriod } = require('../database/period.js');
+const { setOverview } = require('../database/overviews.js');
 
 const overview = async (userId, periodId, sectionId) => {
   const period = await getPeriod(periodId);
@@ -19,16 +20,22 @@ const overview = async (userId, periodId, sectionId) => {
       break;
     case 'achievements':
       const vectorPrompt = `achievement or accomplishment attained`
-      const matches = await ragQuery(userId, vectorPrompt, vectorFilter)
+      // const matches = await ragQuery(userId, vectorPrompt, vectorFilter)
+      const matches = await ragQuery(userId, vectorPrompt)
+      console.log("overview.controller achievements matches___", matches)
+      // const matches = [{score: 1, chunk: 'test chunk'}]
 
-      const llmPrompt = llmPrompts.achievements(periodType, matches);
-      const messages = [{ "role": "system", "content": llmPrompt}]
-      const completion = await chatCompletion({messages: messages, json_object: true})
-      const completionJson = JSON.parse(completion);
-      
-    
-      console.log("overview.controller achievements completionJson___", completionJson)
-      //save the overview to the database in the period object
+      // const llmPrompt = llmPrompts.achievements(periodType, matches);
+      // const messages = [{ "role": "system", "content": llmPrompt}]
+      // const completion = await chatCompletion({messages: messages, json_object: true})
+      // const completionJson = JSON.parse(completion);
+      // const overviewSectionValue = completionJson.achievements 
+      // console.log("overview.controller achievements completionJson___", completionJson)
+
+      // await setOverview(userId, periodId, sectionId, overviewSectionValue)
+
+      // return 'success'
+
       break;
     case 'visualized':
       break;

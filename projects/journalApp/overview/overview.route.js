@@ -4,6 +4,7 @@ const { overview } = require('./overview.controller')
 
 router.post('/', async (req, res) => {
   const {userId, periodId, sectionId} = req.body
+  console.log("overview.route userId, periodId, sectionId___", userId, periodId, sectionId)
 
   try { 
       var response = await overview(userId, periodId, sectionId);

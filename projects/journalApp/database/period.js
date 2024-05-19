@@ -4,11 +4,10 @@ const { DateTime } = require("luxon");
 
 const PERIOD_COLLECTION = 'periods';
 
-async function getPeriods(userId) {
+async function getPeriods() {
   try {
     const ref = db.collection(PERIOD_COLLECTION)
     const snapshot = await ref
-      .where("accountID", "==", userId)
       .orderBy("dateCreated", "desc")
       .get();
 
@@ -20,33 +19,12 @@ async function getPeriods(userId) {
   }
 }
 
-async function deletePeriodsByUserId(userId) {
-  try {
-    const ref = db.collection(PERIOD_COLLECTION);
-    const snapshot = await ref.where("accountID", "==", userId).get();
-
-    if (snapshot.empty) {
-      console.log("No matching documents to delete.");
-      return;
-    }
-
-    snapshot.forEach(async (doc) => {
-      await doc.ref.delete();
-    });
-
-    console.log(`Deleted ${snapshot.size} documents for userId ${userId}`);
-  } catch (e) {
-    console.error("Error deleting documents: ", e);
-  }
-}
-
-async function getCurrentPeriod(type, userId) {
+async function getCurrentPeriod(type) {
   try {
     const now = DateTime.now().toJSDate();
 
     const ref = db.collection(PERIOD_COLLECTION);
     const snapshot = await ref
-      .where("accountID", "==", userId) 
       .where("type", "==", type)
       .where("periodStartDate", "<=", now)
       .where("periodEndDate", ">=", now)
@@ -61,6 +39,7 @@ async function getCurrentPeriod(type, userId) {
     // Return the ID of the first matching document
     const doc = snapshot.docs[0];
     console.log("Current period found: ", doc.id);
+    console.log(doc.data())
     console.log(doc.periodStartDate, doc.periodEndDate)
     return doc.id;
   } catch (e) {
@@ -93,24 +72,16 @@ async function setPeriod(period) {
   }
 }
 
-async function bulkAddPeriods(userId) {
-  const timespans = getYearTimespans()
-  console.log("timespans length___", timespans.length)
-  timespans.forEach(async (timespan) => {
-    const period = {
-      ...timespan,
-      accountID: userId,
-    }
+async function bulkAddPeriods() {
+  const periods = getYearTimespans()
+  console.log("periods length___", periods.length)
+  periods.forEach(async (period) => {
     const res = await db.collection('periods').add(period)
     console.log("bulkAddPeriods res.id___", res.id)
   }
-
-)
+  )
 }
 
-getCurrentPeriod('week', 'f5bb39e3-fd12-4aee-9788-882a9e587ee9')
-// bulkAddPeriods('f5bb39e3-fd12-4aee-9788-882a9e587ee9')
-// deletePeriodsByUserId('f5bb39e3-fd12-4aee-9788-882a9e587ee9')
-  
+// getCurrentPeriod('week')
 
-module.exports = { getPeriods, getPeriod, setPeriod, bulkAddPeriods, getCurrentPeriod, deletePeriodsByUserId };
+module.exports = { getPeriods, getPeriod, setPeriod, bulkAddPeriods, getCurrentPeriod };

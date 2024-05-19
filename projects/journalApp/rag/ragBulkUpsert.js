@@ -1,13 +1,14 @@
 const { chunkText } = require("../../../chunkText/chunkText.controller");
 const { getEntries, setEntry } = require('../database/entries')
 const { getUser } = require('../database/user')
-const { embeddings} = require('../../../embeddings/embeddings.controller')
+const { embedding} = require('../../../embedding/embedding.controller')
 const { vectorUpsert } = require('../../../vectorUpsert/vectorUpsert.controller')
 const { vectorNamespaceDelete } = require('../../../vectorDelete/vectorDelete.controller')
-const { convertTimeStampToInt } = require('../utils/datetime')
+const { convertTimestampToInt } = require('../utils/datetime')
 
 //makes chunks and saves them for multiple entries of a user
 const bulkChunk = async (entries, prompts) => {
+  console.log('bulkChunk___', entries.length, prompts.length)
   for (const entry of entries) {
     const prompt = prompts.find((prompt) => prompt.promptID === entry.promptID)
     const entryChunked = await chunkText(entry, prompt.text? prompt.text : "")
@@ -19,48 +20,61 @@ const bulkChunk = async (entries, prompts) => {
 const bulkEmbed = async (entriesWithChunks) => {
   var upsertData = []
     for (const entryChunked of entriesWithChunks) {
-      const dateCreated = convertTimeStampToInt(entryChunked.dateCreated)
-      const embeddingsArray = await embeddings(entryChunked.chunks)
+      const dateCreated = convertTimestampToInt(entryChunked.dateCreated)
+      console.log('entryChunked chunks ammount___', entryChunked.chunks.length)
 
-      const upsertDataRows = embeddingsArray.map((chunk, i) => {
-        return {
-          id: `${entryChunked.id}#chunk${i+1}`,
-          values: embeddingsArray[i].embedding,
-          metadata: {
-            userId,
-            entryId: entryChunked.id,
-            chunkIndex: i,
-            dateCreated: dateCreated,
-          },
-        };
-      })
-      upsertData.push(...upsertDataRows)
+      for (const chunk of entryChunked.chunks) {
+        const embeddingObj = await embedding(chunk)
+        console.log("embeddingObj___", embeddingObj)
+
+        const upsertDataRow = embeddingObj.map((item, i) => {
+          return {
+            id: `${entryChunked.id}#chunk${i+1}`,
+            values: embeddingObj[i].embedding,
+            metadata: {
+              userId: entryChunked.accountID,
+              entryId: entryChunked.id,
+              chunkIndex: i,
+              dateCreated: dateCreated,
+            },
+          };
+        })
+        upsertData.push(...upsertDataRow)
+      }
+
   }
   return upsertData
 }
 
 const ragBulkUpsert = async (userId, userEmail)  => {
-  const entries = await getEntries(userId);
+  console.log("ragBulkUpsert___", userId, userEmail)
+  const entries = (await getEntries(userId)).slice(1, 20);
   const user = await getUser(userEmail)
   const prompts = user.prompts
   await bulkChunk(entries, prompts)
-  const entriesWithChunks = await getEntries(userId);
-  const upsertData = await bulkEmbed(entriesWithChunks)
+  console.log("bulkChunk done")
+  const entriesWithChunks = (await getEntries(userId)).slice(1, 20);
+  console.log("entriesWithChunks___", entriesWithChunks.length)
+  const upsertData = await bulkEmbed(entriesWithChunks, userId)
+  console.log("upsertData___", upsertData.length)
 
   await vectorNamespaceDelete("entries", userId)
   await vectorUpsert("entries", userId, upsertData)
 }
 
-
-const testChunk = async () => {
-  const entries = (await getEntries(userId)).slice(1, 9);
-  const user = await getUser(userEmail)
-  const prompts = user.prompts
-  await bulkChunk(entries, prompts)
-  const entriesWithChunks = (await getEntries(userId)).slice(1, 9);
-  console.log(entriesWithChunks)
+const test = async (userId) => {
+  const entriesWithChunks = (await getEntries(userId)).slice(1, 20);
+  console.log("entriesWithChunks.length___", entriesWithChunks.length)
+  const upsertData = await bulkEmbed(entriesWithChunks, userId)
+  console.log("upsertData.length___", upsertData.length)
+  await vectorNamespaceDelete("entries", userId)
+  await vectorUpsert("entries", userId, upsertData)
 }
 
-// ragBulkUpsert(userId, userEmail)
+// test('f5bb39e3-fd12-4aee-9788-882a9e587ee9')
+
+// ragBulkUpsert('f5bb39e3-fd12-4aee-9788-882a9e587ee9', 'willrcline.atx@gmail.com')
+
+
 
 module.exports = { ragBulkUpsert };
