@@ -39,7 +39,7 @@ const overview = async (userId, periodId, sectionId) => {
 
       await setOverview(userId, periodId, sectionId, overviewSectionValue)
 
-      return 'success'
+      return overviewSectionValue
     case 'visualized':
       break;
     case 'quotes':
