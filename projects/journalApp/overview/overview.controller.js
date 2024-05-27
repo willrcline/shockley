@@ -6,7 +6,7 @@ const { chatCompletion } = require('../../../chatCompletion/chatCompletion.contr
 const { getCurrentPeriod } = require('../database/period.js');
 const { setOverview } = require('../database/overviews.js');
 
-const process = async (vectorPrompt) => {
+const process = async (sectionId) => {
   const vectorPrompt = vectorPrompts[sectionId];
   const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
   const matchesText = matches
