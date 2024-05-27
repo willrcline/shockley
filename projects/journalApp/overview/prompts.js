@@ -64,7 +64,32 @@ const llmPrompts = {
 
     Journal entry data:
     ${data}
+  `,
+  goals: (periodType, data) => `
+    Instructions:
+    Looking at the user's stated vision / dream and specific goals in addition to their journal entries from the past ${periodType}, generate an overview and analysis of the user's progress towards their vision and specific goals in less than 8 sentences. Be sure to address progress etc. on each specific goal.
 
+    Goal and journal entry data:
+    ${data}
+  `,
+  personality: (periodType, data) => `
+    Instructions:
+    Looking at the user's journal entries from the past ${periodType}, generate a personality analysis of the user.
+
+    Return the personality analysis (3 personality traits total) in JSON format with one field:
+    - personality: [
+      {
+        'trait': [the personality trait],
+        'analysis': [a 1-2 sentence introspective analysis of this dimension of the user's personality],
+        'emoji': [an actual emoji that represents the personality trait],
+        'score': [a number between 0-1 representing the strength of the trait. 1 is the strongest]
+      },
+      ...repeat for the other traits
+    ]
+
+    Journal entry data:
+    ${data}
+  `,
 };
 
 module.exports = { vectorPrompts, llmPrompts }

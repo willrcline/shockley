@@ -26,7 +26,6 @@ async function getUserById(id) {
       console.log('No matching documents!');
     } else {
       const doc = querySnapshot.docs[0];
-      console.log('doc.data().bio', doc.data().bio)
       return doc.data();
     }
   } catch (e) {
@@ -34,8 +33,6 @@ async function getUserById(id) {
     return null;
   }
 }
-
-getUserById("f5bb39e3-fd12-4aee-9788-882a9e587ee9")
 
 
 module.exports = { getUserByEmail, getUserById };

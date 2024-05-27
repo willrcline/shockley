@@ -6,35 +6,49 @@ const { chatCompletion } = require('../../../chatCompletion/chatCompletion.contr
 const { getCurrentPeriod } = require('../database/period.js');
 const { setOverview } = require('../database/overviews.js');
 const { getEntriesInPeriod } = require('../database/entries.js');
+const { getUserById } = require('../database/user.js');
+const { json } = require('express');
 
-const rag = async (userId, periodId, sectionId, periodType, vectorFilter) => {
-  const vectorPrompt = vectorPrompts[sectionId];
-  console.log("overview.controller rag___")
-  const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
-  const matchesText = matches
-    .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
-    .map(match => {
-        const dateStr = match.dateCreated.toDate().toLocaleString(); 
-        return `${dateStr}\n${match.chunk}\n`;
-    })
-    .join('\n');
+const createOverview = {
+  rag : async (userId, periodId, sectionId, period, vectorFilter) => {
+    const vectorPrompt = vectorPrompts[sectionId];
+    console.log("overview.controller rag___")
+    const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
+    const matchesText = matches
+      .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
+      .map(match => {
+          const dateStr = match.dateCreated.toDate().toLocaleString(); 
+          return `${dateStr}\n${match.chunk}\n`;
+      })
+      .join('\n');
 
-  const llmPrompt = llmPrompts[sectionId](periodType, matchesText);
-  const messages = [{ "role": "system", "content": llmPrompt}]
-  const completion = await chatCompletion({messages: messages, json_object: true})
-  const completionJson = JSON.parse(completion);
+      const overviewSectionValue = await generateAndSave(userId, periodId, sectionId, period, matchesText)
+      return overviewSectionValue
+  },
+  allEntriesInPeriod: async (userId, periodId, sectionId, period, json_object=true) => {
+    const entries = await getEntriesInPeriod(userId, period.periodStartDate, period.periodEndDate);
+    // console.log('allEntriesInPeriod___', entries)
+    const entriesText = entries
+      .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
+      .map(entry => {
+          const dateStr = entry.dateCreated.toDate().toLocaleString(); 
+          return `${dateStr}\n${entry.body}\n`;
+      })
+      .join('\n');
 
-  const overviewSectionValue = completionJson[sectionId] 
+    const overviewSectionValue = await generateAndSave(userId, periodId, sectionId, period, entriesText, json_object)
+    return overviewSectionValue
+  },
+  goals: async (userId, periodId, sectionId, period) => {
+    const user = await getUserById(userId)
+    const bio = user.bio
 
-  await setOverview(userId, periodId, sectionId, overviewSectionValue)
+    const entries = await getEntriesInPeriod(userId, period.periodStartDate, period.periodEndDate);
 
-  return overviewSectionValue
-}
+    const bioText = 'Vision / dream: ' + bio.VisionDream +  '\n' 
+      + 'Specific goals: ' + bio.Goals 
 
-const allEntriesInPeriod = async (userId, periodId, sectionId, period) => {
-  const entries = await getEntriesInPeriod(userId, period.periodStartDate, period.periodEndDate);
-  // console.log('allEntriesInPeriod___', entries)
-  const entriesText = entries
+    const entriesText = entries
     .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
     .map(entry => {
         const dateStr = entry.dateCreated.toDate().toLocaleString(); 
@@ -42,14 +56,26 @@ const allEntriesInPeriod = async (userId, periodId, sectionId, period) => {
     })
     .join('\n');
 
-  console.log('entriesText___', entriesText)
+    goalsText = bioText + '\n\n' + entriesText
 
-  const llmPrompt = llmPrompts[sectionId](period.type, entriesText);
+    const overviewSectionValue = await generateAndSave(userId, periodId, sectionId, period, goalsText, false)
+    return overviewSectionValue
+  }
+}
+
+const generateAndSave = async (userId, periodId, sectionId, period, dataForLLM, json_object=true) => {
+  let overviewSectionValue;
+
+  const llmPrompt = llmPrompts[sectionId](period.type, dataForLLM);
   const messages = [{ "role": "system", "content": llmPrompt}]
-  const completion = await chatCompletion({messages: messages, json_object: true})
-  const completionJson = JSON.parse(completion);
+  const completion = await chatCompletion({messages: messages, json_object: json_object})
 
-  const overviewSectionValue = completionJson[sectionId] 
+  if (json_object) {
+    const completionJson = JSON.parse(completion);
+    overviewSectionValue = completionJson[sectionId] 
+  } else {
+    overviewSectionValue = completion
+  }
 
   await setOverview(userId, periodId, sectionId, overviewSectionValue)
 
@@ -70,20 +96,21 @@ const overview = async (userId, periodId, sectionId) => {
   console.log("overview.controller sectionId___", sectionId)
   switch (sectionId) {
     case 'tagCloud':
-      overviewSectionValue = await allEntriesInPeriod(userId, periodId, sectionId, period)
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
       break;
     case 'achievements':
-      overviewSectionValue = await rag(userId, periodId, sectionId, periodType, vectorFilter)
+      overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
     case 'visualized':
       break;
     case 'quotes':
-      overviewSectionValue = await rag(userId, periodId, sectionId, periodType, vectorFilter)
+      overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
     case 'summary':
-      overviewSectionValue = await allEntriesInPeriod(userId, periodId, sectionId, period)
-    case 'goal':
-
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period, false)
+    case 'goals':
+      overviewSectionValue = await createOverview.goals(userId, periodId, sectionId, period)
       break;
     case 'personality':
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
       break;
     case 'suggestions':
       break;
