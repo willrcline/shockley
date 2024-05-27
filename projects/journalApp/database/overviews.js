@@ -4,6 +4,8 @@ const OVERVIEW_COLLECTION = 'overviews';
 
 const setOverview = async (userId, periodId, sectionId, newSectionValue) => {
 
+  console.log('setOverview newSectionValue___', newSectionValue)
+
   const overviewsRef = db.collection(OVERVIEW_COLLECTION);
   const query = overviewsRef.where('userId', '==', userId).where('periodId', '==', periodId);
 
@@ -25,7 +27,6 @@ const setOverview = async (userId, periodId, sectionId, newSectionValue) => {
       }
     } else {
       querySnapshot.forEach(async (doc) => {
-        console.log(doc.id, '=>', doc.data());
         const overviewDocRef = doc.ref;
         try {
           await overviewDocRef.update(updatedData);

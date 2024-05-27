@@ -1,8 +1,23 @@
 const vectorPrompts = {
   achievements: `achievement or accomplishment attained`
+
 }
 
 const llmPrompts = {
+  tagCloud: (periodType, data) => `
+    Instructions:
+    Looking at the user's journal entries from the past ${periodType}, generate data for a tag cloud of the most frequently used words. The size of the word should be proportional to the frequency of its use.
+
+    Create 20 words or phrases. Return the data in JSON format with one field:
+    - tagCloud: [
+      {
+        title: [the word or phrase],
+        sizeMultiplier: [a number representing the frequency of the word's use. Between 1-10, with 10 being the most frequent]
+      }
+
+    Journal entry data:
+    ${data}
+  `,
   achievements: (periodType, data) => `
     Instructions:
     Looking at the user's journal entries from the past ${periodType}, extract 3 achievements that the user has made that are truly worthy of celebration. It should feel sort of like a video game achievement, but based on their real-life accomplishments.

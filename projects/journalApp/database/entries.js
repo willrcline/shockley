@@ -20,6 +20,16 @@ async function getEntries(userId) {
   }
 }
 
+async function getEntriesInPeriod(userId, startDate, endDate) {
+  const allEntries = await getEntries(userId);
+
+  return allEntries.filter(entry => {
+    const entryDate = entry.dateCreated
+    return entryDate >= startDate && entryDate <= endDate;
+  });
+}
+
+
 async function getEntry(entryId) {
   try {
     const entryRef = db.collection(ENTRY_COLLECTION).doc(entryId);
@@ -44,4 +54,4 @@ async function setEntry(entry) {
   }
 }
 
-module.exports = { getEntries, getEntry, setEntry };
+module.exports = { getEntries, getEntriesInPeriod, getEntry, setEntry };
