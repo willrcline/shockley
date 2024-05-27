@@ -6,7 +6,8 @@ const vectorPrompts = {
 const llmPrompts = {
   tagCloud: (periodType, data) => `
     Instructions:
-    Looking at the user's journal entries from the past ${periodType}, generate data for a tag cloud of the most frequently used words. The size of the word should be proportional to the frequency of its use.
+    Looking at the user's journal entries from the past ${periodType}, generate data for a tag cloud of standout topics. The size of the word should be proportional to the degree of relevance to the entries.
+    Feel free to use specific names of people or places, or general topics like "love" or "work".
 
     Create 20 words or phrases. Return the data in JSON format with one field:
     - tagCloud: [
