@@ -1,10 +1,33 @@
 const { getPeriod } = require('../database/period.js');
-const llmPrompts = require('./llmPrompts.js');
+const { vectorPrompts, llmPrompts} = require('./prompts.js');
 const { ragQuery } = require('../rag/ragQuery/ragQuery.controller.js');
 const { convertTimestampToInt } = require('../utils/datetime.js')
 const { chatCompletion } = require('../../../chatCompletion/chatCompletion.controller.js');
 const { getCurrentPeriod } = require('../database/period.js');
 const { setOverview } = require('../database/overviews.js');
+
+const process = async (vectorPrompt) => {
+  const vectorPrompt = vectorPrompts[sectionId];
+  const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
+  const matchesText = matches
+    .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
+    .map(match => {
+        const dateStr = match.dateCreated.toDate().toLocaleString(); 
+        return `${dateStr}\n${match.chunk}\n`;
+    })
+    .join('\n');
+
+  const llmPrompt = llmPrompts[sectionId](periodType, matchesText);
+  const messages = [{ "role": "system", "content": llmPrompt}]
+  const completion = await chatCompletion({messages: messages, json_object: true})
+  const completionJson = JSON.parse(completion);
+
+  const overviewSectionValue = completionJson.achievements 
+
+  await setOverview(userId, periodId, sectionId, overviewSectionValue)
+
+  return overviewSectionValue
+}
 
 const overview = async (userId, periodId, sectionId) => {
   const period = await getPeriod(periodId);
@@ -19,25 +42,7 @@ const overview = async (userId, periodId, sectionId) => {
     case 'tagCloud':
       break;
     case 'achievements':
-      const vectorPrompt = `achievement or accomplishment attained`
-      const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
-      const matchesText = matches
-        .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
-        .map(match => {
-            const dateStr = match.dateCreated.toDate().toLocaleString(); 
-            return `${dateStr}\n${match.chunk}\n`;
-        })
-        .join('\n');
-
-    
-      const llmPrompt = llmPrompts.achievements(periodType, matchesText);
-      const messages = [{ "role": "system", "content": llmPrompt}]
-      const completion = await chatCompletion({messages: messages, json_object: true})
-      const completionJson = JSON.parse(completion);
-
-      const overviewSectionValue = completionJson.achievements 
-
-      await setOverview(userId, periodId, sectionId, overviewSectionValue)
+      const overviewSectionValue = await process(sectionId)
 
       return overviewSectionValue
     case 'visualized':

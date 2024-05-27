@@ -1,3 +1,7 @@
+const vectorPrompts = {
+  achievements: `achievement or accomplishment attained`
+}
+
 const llmPrompts = {
   achievements: (periodType, data) => `
     Instructions:
@@ -16,7 +20,7 @@ const llmPrompts = {
     Journal entry data:
   ${data}
   `,
-
+  
   visualized: (periodType, data) => `
     Instructions:
     Looking at the user's journal entries from the past ${periodType}, generate an image that brings to life a strongly visual part from their entries or a symbolic representation of their entries. Put it in the style of a stunning painting.
@@ -26,4 +30,4 @@ const llmPrompts = {
   `
 };
 
-module.exports = llmPrompts;
+module.exports = { vectorPrompts, llmPrompts }
