@@ -3,16 +3,13 @@ const { vectorPrompts, llmPrompts} = require('./prompts.js');
 const { ragQuery } = require('../rag/ragQuery/ragQuery.controller.js');
 const { convertTimestampToInt } = require('../utils/datetime.js')
 const { chatCompletion } = require('../../../chatCompletion/chatCompletion.controller.js');
-const { getCurrentPeriod } = require('../database/period.js');
 const { setOverview } = require('../database/overviews.js');
 const { getEntriesInPeriod } = require('../database/entries.js');
 const { getUserById } = require('../database/user.js');
-const { json } = require('express');
 
 const createOverview = {
   rag : async (userId, periodId, sectionId, period, vectorFilter) => {
     const vectorPrompt = vectorPrompts[sectionId];
-    console.log("overview.controller rag___")
     const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
     const matchesText = matches
       .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
@@ -27,7 +24,6 @@ const createOverview = {
   },
   allEntriesInPeriod: async (userId, periodId, sectionId, period, json_object=true) => {
     const entries = await getEntriesInPeriod(userId, period.periodStartDate, period.periodEndDate);
-    // console.log('allEntriesInPeriod___', entries)
     const entriesText = entries
       .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
       .map(entry => {
@@ -104,7 +100,6 @@ const generateAndSave = async (userId, periodId, sectionId, period, dataForLLM, 
 
   await setOverview(userId, periodId, sectionId, overviewSectionValue)
 
-  console.log('generateAndSave at end overviewSectionValue___', overviewSectionValue)
   return overviewSectionValue
 }
 
@@ -143,13 +138,11 @@ const overview = async (userId, periodId, sectionId) => {
       break;
     case 'promptSuggestions':
       overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
-      console.log('end of overview overviewSectionValue___', overviewSectionValue)
       break;
     default:
       break;
   }
 
-  console.log('overviewSectionValue___', overviewSectionValue)
   return overviewSectionValue
 };
 
