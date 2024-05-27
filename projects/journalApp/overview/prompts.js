@@ -95,7 +95,7 @@ const llmPrompts = {
     Instructions:
     Looking at the user's stated challenges / growth areas, vision / dream, and specific goals in addition to their journal entries from the past ${periodType}, generate 1-3 sentence suggestions for the user.
 
-    return 5 suggestions in JSON format with one field:
+    return 3 suggestions in JSON format with one field:
     - suggestions: [
       {
         'category': [the category of the suggestion],
