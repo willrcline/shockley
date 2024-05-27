@@ -6,7 +6,7 @@ const { chatCompletion } = require('../../../chatCompletion/chatCompletion.contr
 const { getCurrentPeriod } = require('../database/period.js');
 const { setOverview } = require('../database/overviews.js');
 
-const process = async (sectionId) => {
+const process = async (userId, periodId, sectionId, periodType, vectorFilter) => {
   const vectorPrompt = vectorPrompts[sectionId];
   const matches = await ragQuery(userId, vectorPrompt, undefined, vectorFilter)
   const matchesText = matches
@@ -42,7 +42,7 @@ const overview = async (userId, periodId, sectionId) => {
     case 'tagCloud':
       break;
     case 'achievements':
-      const overviewSectionValue = await process(sectionId)
+      const overviewSectionValue = await process(userId, periodId, sectionId, periodType, vectorFilter)
 
       return overviewSectionValue
     case 'visualized':
