@@ -60,6 +60,30 @@ const createOverview = {
 
     const overviewSectionValue = await generateAndSave(userId, periodId, sectionId, period, goalsText, false)
     return overviewSectionValue
+  },
+  suggestions: async (userId, periodId, sectionId, period) => {
+    const user = await getUserById(userId)
+    const bio = user.bio
+
+    const entries = await getEntriesInPeriod(userId, period.periodStartDate, period.periodEndDate);
+
+    const bioText 
+      = 'Challenges and growth areas: ' + bio.ChallengesGrowthAreas +  '\n' 
+      + 'Vision / dream: ' + bio.VisionDream +  '\n'
+      + 'Specific goals: ' + bio.Goals 
+
+    const entriesText = entries
+    .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
+    .map(entry => {
+        const dateStr = entry.dateCreated.toDate().toLocaleString(); 
+        return `${dateStr}\n${entry.body}\n`;
+    })
+    .join('\n');
+
+    suggestionsText = bioText + '\n\n' + entriesText
+
+    const overviewSectionValue = await generateAndSave(userId, periodId, sectionId, period, goalsText, false)
+    return overviewSectionValue
   }
 }
 
@@ -72,6 +96,7 @@ const generateAndSave = async (userId, periodId, sectionId, period, dataForLLM, 
 
   if (json_object) {
     const completionJson = JSON.parse(completion);
+    console.log('completionJson___', completionJson)
     overviewSectionValue = completionJson[sectionId] 
   } else {
     overviewSectionValue = completion
@@ -79,6 +104,7 @@ const generateAndSave = async (userId, periodId, sectionId, period, dataForLLM, 
 
   await setOverview(userId, periodId, sectionId, overviewSectionValue)
 
+  console.log('generateAndSave at end overviewSectionValue___', overviewSectionValue)
   return overviewSectionValue
 }
 
@@ -113,8 +139,11 @@ const overview = async (userId, periodId, sectionId) => {
       overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
       break;
     case 'suggestions':
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
       break;
-    case 'promptPrescriptions':
+    case 'promptSuggestions':
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
+      console.log('end of overview overviewSectionValue___', overviewSectionValue)
       break;
     default:
       break;

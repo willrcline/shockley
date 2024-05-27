@@ -90,6 +90,39 @@ const llmPrompts = {
     Journal entry data:
     ${data}
   `,
+  suggestions: (periodType, data) => `
+    Instructions:
+    Looking at the user's stated challenges / growth areas, vision / dream, and specific goals in addition to their journal entries from the past ${periodType}, generate 1-3 sentence suggestions for the user.
+
+    return 5 suggestions in JSON format with one field:
+    - suggestions: [
+      {
+        'category': [the category of the suggestion],
+        'suggestion': [the suggestion],
+      },
+      ...repeat for the other suggestions
+    ]
+
+    Challenges and journal entry data:
+    ${data}
+  `,
+  promptSuggestions: (periodType, data) => `
+    Instructions:
+    Looking at the user's journal entries from the past ${periodType}, generate 3 suggested journal prompts for the user to write to in the future. Make the prompts short, thought provoking questions or prompts. Return each in barebones html formatting similar to this example:
+    <div><span style="color: #ada8a8; font-weight: bold;">Example prompt</span><span style="color: #ffffff">&nbsp;</span></div>
+
+    Note in the example, that the color must be set to #ada8a8, and that there is a span at the end set to #ffffff, so that when the user types next to the prompt on the same line or on the next line, the text will be white. The result is that the prompt is gray while the user text is white.
+    Also note that the prompt can span multiple new lines for multipart prompts.
+    
+    Return the three prompts in JSON format with one field containing an array:
+    - promptSuggestions: [
+      [the prompt in html format],
+      ...repeat for the other prompts
+    ]
+
+    Journal entry data:
+    ${data}
+  `,  
 };
 
 module.exports = { vectorPrompts, llmPrompts }
