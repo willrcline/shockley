@@ -3,7 +3,7 @@ const { embedding } = require("../../../../embedding/embedding.controller");
 const { vectorDocDelete } = require('../../../../vectorDelete/vectorDelete.controller');
 const { vectorUpsert } = require("../../../../vectorUpsert/vectorUpsert.controller")
 const { getEntry, setEntry } = require('../../database/entries')
-const { getUser } = require('../../database/user')
+const { getUserById } = require('../../database/user')
 const { chunkText } = require('../../../../chunkText/chunkText.controller')
 const { convertTimestampToInt } = require('../../utils/datetime')
 
@@ -32,9 +32,9 @@ const ragEmbed = async (entryChunked) => {
   return upsertDataRows
 }
 
-async function ragUpsert(userId, userEmail, entryId) {
+async function ragUpsert(userId, entryId) {
   const entry = await getEntry(entryId);
-  const user = await getUser(userEmail)
+  const user = await getUserById(userId)
   const prompts = user.prompts
   const prompt = prompts.find((prompt) => prompt.promptID === entry.promptID)
   await ragChunk (entry, prompt)

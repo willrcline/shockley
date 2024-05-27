@@ -58,7 +58,12 @@ const llmPrompts = {
     Journal entry data:
     ${data}
   `,
+  summary: (periodType, data) => `
+    Instructions:
+    Looking at the user's journal entries from the past ${periodType}, summarize the user's experience in a less than 8 sentences. 
 
+    Journal entry data:
+    ${data}
 
 };
 

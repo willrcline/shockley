@@ -74,14 +74,14 @@ const overview = async (userId, periodId, sectionId) => {
       break;
     case 'achievements':
       overviewSectionValue = await rag(userId, periodId, sectionId, periodType, vectorFilter)
-      
     case 'visualized':
       break;
     case 'quotes':
       overviewSectionValue = await rag(userId, periodId, sectionId, periodType, vectorFilter)
     case 'summary':
-      break;
+      overviewSectionValue = await allEntriesInPeriod(userId, periodId, sectionId, period)
     case 'goal':
+
       break;
     case 'personality':
       break;

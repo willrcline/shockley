@@ -1,6 +1,6 @@
 const { chunkText } = require("../../../chunkText/chunkText.controller");
 const { getEntries, setEntry } = require('../database/entries')
-const { getUser } = require('../database/user')
+const { getUserById } = require('../database/user')
 const { embedding} = require('../../../embedding/embedding.controller')
 const { vectorUpsert } = require('../../../vectorUpsert/vectorUpsert.controller')
 const { vectorNamespaceDelete } = require('../../../vectorDelete/vectorDelete.controller')
@@ -46,9 +46,9 @@ const bulkEmbed = async (entriesWithChunks) => {
   return upsertData
 }
 
-const ragBulkUpsert = async (userId, userEmail)  => {
+const ragBulkUpsert = async (userId)  => {
   const entries = (await getEntries(userId)).slice(1, 20);
-  const user = await getUser(userEmail)
+  const user = await getUserById(userId)
   const prompts = user.prompts
   await bulkChunk(entries, prompts)
   const entriesWithChunks = (await getEntries(userId)).slice(1, 20);
