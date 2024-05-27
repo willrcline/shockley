@@ -1,6 +1,6 @@
 const vectorPrompts = {
-  achievements: `achievement or accomplishment attained`
-
+  achievements: `achievement or accomplishment attained`,
+  quotes: 'moments of joy, gratitude, triumph, love, friendship'
 }
 
 const llmPrompts = {
@@ -35,14 +35,31 @@ const llmPrompts = {
     Journal entry data:
   ${data}
   `,
-  
   visualized: (periodType, data) => `
     Instructions:
     Looking at the user's journal entries from the past ${periodType}, generate an image that brings to life a strongly visual part from their entries or a symbolic representation of their entries. Put it in the style of a stunning painting.
 
     Journal entry data:
     ${data}
-  `
+  `,
+  quotes: (periodType, data) => `
+    Instructions:
+    Looking at the user's journal entries from the past ${periodType}, extract 3 quotes. Choose quotes about moments of joy, gratitude, triumph, love, friendship etc.
+
+    Return the three quotes in JSON format with one field:
+    - quotes: [
+      {
+        'quote': [the quote],
+        'date': [the date the quote was written which will be above the entry it was extracted from. format: 05/23/2023],
+      },
+      ...repeat for the other two quotes
+    ]
+
+    Journal entry data:
+    ${data}
+  `,
+
+
 };
 
 module.exports = { vectorPrompts, llmPrompts }
