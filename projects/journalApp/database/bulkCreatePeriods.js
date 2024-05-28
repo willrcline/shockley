@@ -12,9 +12,16 @@ const getYearTimespans = (userTimeZone = "America/Chicago") => {
   let weekStart = DateTime.local(currentYear).startOf("week").set({ hour: 0, minute: 0, second: 0 });
   let weekEnd = weekStart.endOf("week").set({ hour: 23, minute: 59, second: 59 });
 
+  sequenceIndex = {
+    week: 0,
+    month: 0,
+    year: 0
+  }
+
   while (weekStart.year === currentYear) {
     periodList.push({
       type: "week",
+      sequenceId: sequenceIndex.week,
       periodStartDate: weekStart.toJSDate(),
       periodEndDate: weekEnd.toJSDate(),
     });
@@ -22,6 +29,8 @@ const getYearTimespans = (userTimeZone = "America/Chicago") => {
     // Move to the next week
     weekStart = weekStart.plus({ weeks: 1 }).startOf("week").set({ hour: 0, minute: 0, second: 0 });
     weekEnd = weekStart.endOf("week").set({ hour: 23, minute: 59, second: 59 });
+
+    sequenceIndex.week++;
   }
 
   // Get all months from the start to the end of the year
@@ -31,6 +40,7 @@ const getYearTimespans = (userTimeZone = "America/Chicago") => {
   while (monthStart.year === currentYear) {
     periodList.push({
       type: "month",
+      sequenceId: sequenceIndex.month,
       periodStartDate: monthStart.toJSDate(),
       periodEndDate: monthEnd.toJSDate(),
     });
@@ -38,6 +48,8 @@ const getYearTimespans = (userTimeZone = "America/Chicago") => {
     // Move to the next month
     monthStart = monthStart.plus({ months: 1 }).startOf("month").set({ hour: 0, minute: 0, second: 0 });
     monthEnd = monthStart.endOf("month").set({ hour: 23, minute: 59, second: 59 });
+
+    sequenceIndex.month++;
   }
 
   const yearStart = DateTime.local(currentYear).startOf("year").set({ hour: 0, minute: 0, second: 0 });
@@ -45,6 +57,7 @@ const getYearTimespans = (userTimeZone = "America/Chicago") => {
 
   periodList.push({
     type: "year",
+    sequenceId: sequenceIndex.year,
     periodStartDate: yearStart.toJSDate(),
     periodEndDate: yearEnd.toJSDate(),
   });

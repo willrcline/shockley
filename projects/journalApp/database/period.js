@@ -82,6 +82,22 @@ async function bulkAddPeriods() {
   )
 }
 
+async function deleteAllPeriods() {
+  try {
+    const ref = db.collection(PERIOD_COLLECTION)
+    const snapshot = await ref.get();
+    snapshot.forEach(doc => {
+      doc.ref.delete();
+    });
+  } catch (e) {
+    console.error("Error deleting all documents: ", e);
+  }
+}
+
+bulkAddPeriods()
+
+// deleteAllPeriods()
+
 // getCurrentPeriod('week')
 
 module.exports = { getPeriods, getPeriod, setPeriod, bulkAddPeriods, getCurrentPeriod };
