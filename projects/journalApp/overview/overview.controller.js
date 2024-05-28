@@ -125,8 +125,10 @@ const overview = async (userId, periodId, sectionId) => {
       break;
     case 'quotes':
       overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
+      break;
     case 'summary':
       overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period, false)
+      break;
     case 'goals':
       overviewSectionValue = await createOverview.goals(userId, periodId, sectionId, period)
       break;
