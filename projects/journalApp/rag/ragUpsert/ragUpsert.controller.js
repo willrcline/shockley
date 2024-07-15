@@ -36,6 +36,9 @@ async function ragUpsert(userId, entryId) {
   const entry = await getEntry(entryId);
   const user = await getUserById(userId)
   const prompts = user.prompts
+  console.log("ragUpsert.controller prompts___", prompts)
+  console.log("ragUpsert.controller entry___", entry)
+  console.log("ragUpsert.controller entry.promptID___", entry.promptID)
   const prompt = prompts.find((prompt) => prompt.promptID === entry.promptID)
   await ragChunk (entry, prompt)
   const entryChunked = await getEntry(entryId);

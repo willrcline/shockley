@@ -76,7 +76,7 @@ async function bulkAddPeriods() {
   const periods = getYearTimespans()
   console.log("periods length___", periods.length)
   periods.forEach(async (period) => {
-    const res = await db.collection('periods').add(period)
+    const res = await db.collection('periods').add({...period, dateCreated: new Date()})
     console.log("bulkAddPeriods res.id___", res.id)
   }
   )
@@ -94,7 +94,7 @@ async function deleteAllPeriods() {
   }
 }
 
-bulkAddPeriods()
+// bulkAddPeriods()
 
 // deleteAllPeriods()
 

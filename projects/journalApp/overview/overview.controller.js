@@ -24,6 +24,7 @@ const createOverview = {
   },
   allEntriesInPeriod: async (userId, periodId, sectionId, period, json_object=true) => {
     const entries = await getEntriesInPeriod(userId, period.periodStartDate, period.periodEndDate);
+    console.log("allEntriesInPeriod entries___", entries)
     const entriesText = entries
       .sort((a, b) => b.dateCreated.toDate() - a.dateCreated.toDate())
       .map(entry => {
