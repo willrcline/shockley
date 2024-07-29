@@ -82,6 +82,30 @@ async function bulkAddPeriods() {
   )
 }
 
+async function deletePeriodsBeforeDate(date) {
+  //delete all periods before a firestore timestamp
+  console.log('period deletePeriodsBeforeDate date___', date)
+  try {
+    const ref = db.collection(PERIOD_COLLECTION)
+    const snapshot = await ref
+      .where("dateCreated", "<", date)
+      .get();
+    snapshot.forEach(doc => {
+      console.log("deleting period: ", doc.id)
+      doc.ref.delete();
+    });
+    const snapshotWithoutDateCreated = await ref.get();
+    snapshotWithoutDateCreated.forEach(doc => {
+      if (!doc.data().dateCreated) {
+        console.log("deleting period without dateCreated: ", doc.id);
+        doc.ref.delete();
+      }
+    });
+  } catch (e) {
+    console.error("Error deleting documents: ", e);
+  }
+}
+
 async function deleteAllPeriods() {
   try {
     const ref = db.collection(PERIOD_COLLECTION)
@@ -97,6 +121,9 @@ async function deleteAllPeriods() {
 // bulkAddPeriods()
 
 // deleteAllPeriods()
+
+// run deleteAllPeriodsBeforeDate with this date: June 19, 2024 at 6:45:21 PM UTC-5
+deletePeriodsBeforeDate(new Date('2024-06-19T18:45:21-05:00'))
 
 // getCurrentPeriod('week')
 
