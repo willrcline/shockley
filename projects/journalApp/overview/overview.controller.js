@@ -121,11 +121,13 @@ const overview = async (userId, periodId, sectionId) => {
       overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
       break;
     case 'achievements':
-      overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
+      // overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
     case 'visualized':
       break;
     case 'quotes':
-      overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
+      // overviewSectionValue = await createOverview.rag(userId, periodId, sectionId, period, vectorFilter)
+      overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period)
       break;
     case 'summary':
       overviewSectionValue = await createOverview.allEntriesInPeriod(userId, periodId, sectionId, period, false)
