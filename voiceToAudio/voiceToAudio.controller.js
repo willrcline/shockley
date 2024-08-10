@@ -25,19 +25,19 @@ const voiceToAudio = async ({projectId, userId, audioFile }) => {
 
     var updatedChatHistory = [...chatHistory, inputObj];
     
-    var chatCompletion = await chatCompletion({ messages: updatedChatHistory, model: aiModel });
-    console.log("VoiceToAudio.controller chatCompletion___", chatCompletion)
+    var chatCompletionRes = await chatCompletion({ messages: updatedChatHistory, model: aiModel });
+    console.log("VoiceToAudio.controller chatCompletionRes___", chatCompletionRes)
 
     
     var responseObj = { ended: false, audioBase64: null, chatHistory: null };
 
-    if (hasEnd && checkEnd(chatCompletion)) {
+    if (hasEnd && checkEnd(chatCompletionRes)) {
         responseObj.ended = true;
         responseObj.chatHistory = updatedChatHistory;
         updateChatHistory(projectId, userId, []);
     } else {
-        updateChatHistory(projectId, userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletion }]);
-        responseObj.audioBase64 = await textToSpeech({ text: chatCompletion });
+        updateChatHistory(projectId, userId, [...updatedChatHistory, { "role": "assistant", "content": chatCompletionRes }]);
+        responseObj.audioBase64 = await textToSpeech({ text: chatCompletionRes });
     }
 
     return responseObj;
