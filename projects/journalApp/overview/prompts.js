@@ -83,7 +83,7 @@ const llmPrompts = {
         'trait': [the personality trait],
         'analysis': [a 1-2 sentence introspective analysis of this dimension of the user's personality],
         'emoji': [an actual emoji that represents the personality trait],
-        'score': [an integer (whole number) between 1-10 representing the strength of the trait. 1 is the strongest]
+        'score': [an integer (whole number) between 1-10 representing the strength of the trait.]
       },
       ...repeat for the other traits
     ]
