@@ -3,10 +3,10 @@ const router = express.Router()
 const { chatCompletion } = require('./chatCompletion.controller')
 
 router.post('/', async (req, res) => {
-    const {chatHistory} = req.body
+    const {chatHistory, temperature} = req.body
 
     try { 
-        var completion = await chatCompletion({messages: chatHistory});
+        var completion = await chatCompletion({messages: chatHistory, temperature});
         console.log("chatCompletion.route completion___", completion)
         res.status(200).send(completion);
 
