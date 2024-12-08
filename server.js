@@ -9,6 +9,7 @@ const ragUpsert = require('./projects/journalApp/rag/ragUpsert/ragUpsert.route')
 const ragQuery = require("./projects/journalApp/rag/ragQuery/ragQuery.route")
 const overview = require('./projects/journalApp/overview/overview.route')
 const bulkPeriods = require('./projects/journalApp/bulkPeriods/bulkPeriods.route')
+const deleteAuthUser = require('./projects/journalApp/deleteAuthUser/deleteAuthUser.route')
 const port = process.env.PORT || 3001;
 const cors = require('cors');
 
@@ -23,6 +24,7 @@ app.use('/v1/rag-upsert', ragUpsert)
 app.use('/v1/rag-query', ragQuery)
 app.use('/v1/journal-app/overview', overview)
 app.use('/v1/journal-app/bulk-periods', bulkPeriods)
+app.use('/v1/journal-app/delete-auth-user', deleteAuthUser)
 
 
 app.listen(port, () => {
