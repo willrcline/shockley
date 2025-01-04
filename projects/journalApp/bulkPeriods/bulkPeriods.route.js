@@ -3,10 +3,9 @@ const router = express.Router()
 const { bulkPeriods } = require('./bulkPeriods.controller')
 
 router.post('/', async (req, res) => {
-  const {userId} = req.body
 
   try { 
-      var response = await bulkPeriods(userId);
+      var response = await bulkPeriods();
       res.status(200).send(response);
 
   } catch (error) {

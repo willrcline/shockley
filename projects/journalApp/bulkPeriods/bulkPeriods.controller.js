@@ -1,8 +1,8 @@
 const { bulkAddPeriods } = require('../database/period.js')
 
-const bulkPeriods = async (userId) => {
+const bulkPeriods = async () => {
   try {
-    await bulkAddPeriods(userId)
+    await bulkAddPeriods()
   } catch (error) {
     console.error("bulkPeriods.controller error___", error)
     return {error: 'Unexpected error processing request.'}
