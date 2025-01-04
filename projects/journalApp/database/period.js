@@ -1,9 +1,8 @@
-const { db } = require('../../../firebase/connection.js')
-const { getYearTimespans } = require('./bulkCreatePeriods.js')
+const { db } = require("../../../firebase/connection.js");
+const { getYearTimespans } = require("./bulkCreatePeriods.js");
 const { DateTime } = require("luxon");
 
-const PERIOD_COLLECTION = 'periods';
-
+const PERIOD_COLLECTION = "periods";
 
 async function getPeriods() {
   try {
@@ -83,7 +82,7 @@ async function setPeriod(period) {
 }
 
 async function bulkAddPeriods() {
-  const periods = getYearTimespans(); 
+  const periods = getYearTimespans();
   console.log("periods length___", periods.length);
   periods.forEach(async (period) => {
     const res = await db
@@ -92,7 +91,6 @@ async function bulkAddPeriods() {
     console.log("bulkAddPeriods res.id___", res.id);
   });
 }
-
 
 async function deletePeriodsBeforeDate(date) {
   console.log("Soft-deleting periods before date___", date);
@@ -103,7 +101,7 @@ async function deletePeriodsBeforeDate(date) {
     snapshot.forEach(async (doc) => {
       console.log(`Soft-deleting period: ${doc.id}`);
       await doc.ref.update({
-        deletedAt: new Date(), 
+        deletedAt: new Date(),
       });
     });
 
@@ -122,7 +120,6 @@ async function deletePeriodsBeforeDate(date) {
   }
 }
 
-
 async function deletePeriodsInYear2025() {
   const startOf2025 = new Date("2025-01-01T00:00:00.000Z");
   const endOf2025 = new Date("2025-12-31T23:59:59.999Z");
@@ -137,7 +134,7 @@ async function deletePeriodsInYear2025() {
     snapshot.forEach(async (doc) => {
       console.log(`Soft-deleting period: ${doc.id}`);
       await doc.ref.update({
-        deletedAt: new Date(), 
+        deletedAt: new Date(),
       });
     });
 
@@ -146,7 +143,6 @@ async function deletePeriodsInYear2025() {
     console.error("Error soft-deleting documents: ", e);
   }
 }
-
 
 async function addNullDeletedAtField() {
   try {
@@ -204,6 +200,12 @@ async function renameDateCreatedToCreatedAt() {
     console.error("Error renaming dateCreated field:", err);
   }
 }
-renameDateCreatedToCreatedAt()
+renameDateCreatedToCreatedAt();
 
-module.exports = { getPeriods, getPeriod, setPeriod, bulkAddPeriods, getCurrentPeriod };
+module.exports = {
+  getPeriods,
+  getPeriod,
+  setPeriod,
+  bulkAddPeriods,
+  getCurrentPeriod,
+};
