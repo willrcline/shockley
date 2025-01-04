@@ -81,8 +81,8 @@ async function setPeriod(period) {
   }
 }
 
-async function bulkAddPeriods() {
-  const periods = getYearTimespans();
+async function bulkAddPeriods(year) {
+  const periods = getYearTimespans(year);
   console.log("periods length___", periods.length);
   periods.forEach(async (period) => {
     const res = await db
@@ -91,6 +91,7 @@ async function bulkAddPeriods() {
     console.log("bulkAddPeriods res.id___", res.id);
   });
 }
+
 
 async function deletePeriodsBeforeDate(date) {
   console.log("Soft-deleting periods before date___", date);
@@ -120,29 +121,48 @@ async function deletePeriodsBeforeDate(date) {
   }
 }
 
-async function deletePeriodsInYear2025() {
-  const startOf2025 = new Date("2025-01-01T00:00:00.000Z");
-  const endOf2025 = new Date("2025-12-31T23:59:59.999Z");
+async function deletePeriodsInYear(year, hardDelete = false) {
+  const startOfYear = new Date(`${year}-01-01T00:00:00.000Z`);
+  const endOfYear = new Date(`${year}-12-31T23:59:59.999Z`);
 
   try {
     const ref = db.collection(PERIOD_COLLECTION);
     const snapshot = await ref
-      .where("periodStartDate", ">=", startOf2025)
-      .where("periodStartDate", "<=", endOf2025)
+      .where("periodStartDate", ">=", startOfYear)
+      .where("periodStartDate", "<=", endOfYear)
       .get();
 
+    if (snapshot.empty) {
+      console.log(`No documents found for the year ${year}.`);
+      return;
+    }
+
     snapshot.forEach(async (doc) => {
-      console.log(`Soft-deleting period: ${doc.id}`);
-      await doc.ref.update({
-        deletedAt: new Date(),
-      });
+      if (hardDelete) {
+        console.log(`Hard-deleting period: ${doc.id}`);
+        await doc.ref.delete();
+      } else {
+        console.log(`Soft-deleting period: ${doc.id}`);
+        await doc.ref.update({
+          deletedAt: new Date(),
+        });
+      }
     });
 
-    console.log("Soft delete complete for all documents in 2025.");
+    console.log(
+      hardDelete
+        ? `Hard delete complete for all documents in ${year}.`
+        : `Soft delete complete for all documents in ${year}.`
+    );
   } catch (e) {
-    console.error("Error soft-deleting documents: ", e);
+    console.error(
+      hardDelete
+        ? `Error hard-deleting documents: ${e}`
+        : `Error soft-deleting documents: ${e}`
+    );
   }
 }
+
 
 async function addNullDeletedAtField() {
   try {
@@ -167,40 +187,6 @@ async function addNullDeletedAtField() {
     console.error("Error adding `deletedAt` field to periods:", err);
   }
 }
-
-async function renameDateCreatedToCreatedAt() {
-  try {
-    const ref = db.collection(PERIOD_COLLECTION);
-    const snapshot = await ref.get();
-
-    let updatedCount = 0;
-
-    // Iterate over all documents in the periods collection
-    for (const doc of snapshot.docs) {
-      const data = doc.data();
-
-      // Only rename if dateCreated exists
-      if (data.hasOwnProperty("dateCreated")) {
-        // newData includes copying old value + removing the old field
-        const newData = {
-          createdAt: data.dateCreated,
-          dateCreated: admin.firestore.FieldValue.delete(),
-        };
-
-        await doc.ref.update(newData);
-        console.log(`Renamed dateCreated -> createdAt on doc: ${doc.id}`);
-        updatedCount++;
-      }
-    }
-
-    console.log(
-      `Successfully renamed dateCreated to createdAt on ${updatedCount} documents.`
-    );
-  } catch (err) {
-    console.error("Error renaming dateCreated field:", err);
-  }
-}
-renameDateCreatedToCreatedAt();
 
 module.exports = {
   getPeriods,
