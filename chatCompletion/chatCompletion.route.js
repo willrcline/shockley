@@ -8,11 +8,11 @@ router.post('/', async (req, res) => {
     try { 
         var completion = await chatCompletion({messages: chatHistory, temperature});
         console.log("chatCompletion.route completion___", completion)
-        res.status(200).send(completion);
+        res.status(200).send({completion});
 
     } catch (error) {
         console.error("chatCompletion.route error___", error);
-        res.status(500).send({error: 'Unexpected error processing request.'});
+        res.status(error.status).send({error: error.message || 'Error processing chat completion request.'});
     }
 })
 
